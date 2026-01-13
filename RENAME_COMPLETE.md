@@ -40,7 +40,7 @@ src/
 
 ### GitHub URLs
 All references now point to:
-- `https://github.com/yourusername/Mikmbr`
+- `https://github.com/tonybowen-me/Mikmbr`
 
 ## Files Updated
 

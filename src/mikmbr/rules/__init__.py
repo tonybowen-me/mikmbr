@@ -18,6 +18,10 @@ from .template_injection import TemplateInjectionRule
 from .timing_attack import TimingAttackRule
 from .bare_except import BareExceptRule
 from .debug_code import DebugCodeRule
+from .weak_password_hash import WeakPasswordHashRule
+from .insecure_cookie import InsecureCookieRule
+from .jwt_security import JWTSecurityRule
+from .session_security import SessionSecurityRule
 
 # Registry of all available rules
 ALL_RULES = [
@@ -38,6 +42,10 @@ ALL_RULES = [
     TimingAttackRule(),
     BareExceptRule(),
     DebugCodeRule(),
+    WeakPasswordHashRule(),
+    InsecureCookieRule(),
+    JWTSecurityRule(),
+    SessionSecurityRule(),
 ]
 
 __all__ = [

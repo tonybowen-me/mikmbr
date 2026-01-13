@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(py -m airisk.cli scan:*)",
+      "Bash(python demo.py:*)",
+      "Bash(py demo_config.py)",
+      "Bash(python demo_config.py:*)",
+      "Bash(python3:*)",
+      "Bash(where python py python3)",
+      "Bash(C:UsersTonyAppDataLocalMicrosoftWindowsAppspython.exe -m pytest tests/test_config.py -v)",
+      "Bash(python -m pytest:*)",
+      "Bash(cmd.exe /c \"python demo_config.py\")",
+      "Bash(cmd.exe /c \"python -m pytest tests/test_config.py::TestConfigLoading::test_default_config -v 2>&1\")",
+      "Bash(test:*)",
+      "Bash(grep:*)",
+      "Bash(py -m pip install:*)",
+      "Bash(ls:*)"
+    ]
+  }
+}

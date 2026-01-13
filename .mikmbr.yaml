@@ -1,0 +1,128 @@
+# mikmbr Configuration File
+# Place this file as .mikmbr.yaml in your project root
+# The scanner will automatically discover and use it
+
+version: "1.4"
+
+# Rule Configuration
+# Enable/disable specific rules or override their severity
+rules:
+  # Disable a specific rule
+  # DANGEROUS_EXEC: false
+
+  # Override severity for a rule
+  # SQL_INJECTION:
+  #   enabled: true
+  #   severity: CRITICAL  # Options: INFO, LOW, MEDIUM, HIGH, CRITICAL
+
+  # All available rules (uncomment to configure):
+  # DANGEROUS_EXEC:
+  #   enabled: true
+  # COMMAND_INJECTION:
+  #   enabled: true
+  # SQL_INJECTION:
+  #   enabled: true
+  # WEAK_CRYPTO:
+  #   enabled: true
+  # HARDCODED_SECRETS:
+  #   enabled: true
+  # INSECURE_DESERIALIZATION:
+  #   enabled: true
+  # PATH_TRAVERSAL:
+  #   enabled: true
+  # INSECURE_RANDOM:
+  #   enabled: true
+  # REGEX_DOS:
+  #   enabled: true
+  # XXE:
+  #   enabled: true
+
+# Smart Secret Detection Configuration
+secret_detection:
+  enabled: true
+
+  # Entropy-based detection
+  entropy:
+    enabled: true
+    min_length: 20      # Minimum string length for entropy analysis
+    min_entropy: 3.5    # Minimum Shannon entropy (0-8 scale)
+
+  # Known pattern detection (AWS, GitHub, etc.)
+  patterns:
+    enabled: true
+
+  # Variable name-based detection
+  variable_names:
+    enabled: true
+    min_length: 8       # Minimum value length for variable name matches
+
+  # Paths to exclude from secret scanning (in addition to defaults)
+  exclude_paths:
+    - "*/test/*"
+    - "*/tests/*"
+    - "test_*.py"
+    - "*_test.py"
+    - "*/fixtures/*"
+    - "*/fixture/*"
+    - "*/mock/*"
+    - "*/mocks/*"
+    - "*/example/*"
+    - "*/examples/*"
+    - "conftest.py"
+
+  # Additional placeholder strings to ignore
+  custom_placeholders:
+    # - "my_company_placeholder"
+    # - "internal_test_key"
+
+# Output Configuration
+output:
+  format: human           # Options: human, json
+  verbose: false          # Show detailed output with CWE, OWASP, code snippets
+  show_code: true         # Include code snippets in output
+  color: true             # Use ANSI colors in terminal output
+  max_line_length: 120    # Maximum line length for code snippets
+
+# Scan Configuration
+scan:
+  # File patterns to include (default: Python only)
+  include_patterns:
+    - "*.py"
+
+  # Patterns to exclude from scanning
+  exclude_patterns:
+    - "*.pyc"
+    - "__pycache__/*"
+    - ".git/*"
+    - "venv/*"
+    - "env/*"
+    - ".venv/*"
+    - "node_modules/*"
+    - "build/*"
+    - "dist/*"
+    - "*.egg-info/*"
+
+  # Maximum file size to scan (in KB)
+  max_file_size_kb: 1024  # 1MB
+
+  # Follow symbolic links
+  follow_symlinks: false
+
+# Example: Strict Configuration for CI/CD
+# Uncomment and modify for production use
+# rules:
+#   DANGEROUS_EXEC:
+#     enabled: true
+#     severity: CRITICAL
+#   HARDCODED_SECRETS:
+#     enabled: true
+#     severity: CRITICAL
+#
+# secret_detection:
+#   entropy:
+#     min_entropy: 3.0    # More sensitive
+#   exclude_paths: []     # Scan everything
+#
+# output:
+#   format: json
+#   verbose: true

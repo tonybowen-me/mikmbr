@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mikmbr - Python Security Scanner | Find Vulnerabilities Instantly</title>
+    <meta name="description" content="Fast, open-source security scanner for Python. Detects 17 types of vulnerabilities including SQL injection, secrets, SSRF. OWASP Top 10 coverage.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Mikmbr</div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#quickstart">Quick Start</a>
+                <a href="#rules">Rules</a>
+                <a href="https://github.com/yourusername/Mikmbr" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Find Security Vulnerabilities in Python Code. <span class="highlight">Instantly.</span></h1>
+            <p class="subtitle">Fast, deterministic security scanner powered by AST analysis. 17 detection rules covering OWASP Top 10.</p>
+
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">17</div>
+                    <div class="stat-label">Detection Rules</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">9/10</div>
+                    <div class="stat-label">OWASP Coverage</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Files/Second</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">FREE</div>
+                    <div class="stat-label">Open Source</div>
+                </div>
+            </div>
+
+            <div class="cta-buttons">
+                <a href="#quickstart" class="btn btn-primary">Get Started</a>
+                <a href="https://github.com/yourusername/Mikmbr" class="btn btn-secondary">View on GitHub</a>
+            </div>
+
+            <div class="code-example">
+                <pre><code>$ pip install mikmbr
+$ mikmbr scan .
+
+Found 3 security issue(s):
+
+[<span class="severity-high">HIGH</span>] src/app.py:12
+  Rule: DANGEROUS_EXEC
+  CWE: CWE-95
+  OWASP: A03:2021 - Injection
+  Issue: Use of eval() allows arbitrary code execution</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Mikmbr?</h2>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔍</div>
+                    <h3>Comprehensive Detection</h3>
+                    <p>17 security rules covering SQL injection, command injection, hardcoded secrets, SSRF, template injection, and more.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast</h3>
+                    <p>Built on Python AST analysis. Scans typical repositories in seconds with zero false positives.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎛️</div>
+                    <h3>Fully Configurable</h3>
+                    <p>YAML-based configuration for custom rules, severity levels, and output formats. Perfect for CI/CD.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>Smart Secret Detection</h3>
+                    <p>Three-layer detection: 12+ known patterns (AWS, GitHub), entropy analysis, and variable name detection.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>Runs entirely offline. Your code never leaves your machine. No cloud required.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Learn as You Scan</h3>
+                    <p>Every finding includes CWE/OWASP references, detailed explanations, and fix suggestions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Section -->
+    <section id="quickstart" class="quickstart">
+        <div class="container">
+            <h2>Get Started in 30 Seconds</h2>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Install</h3>
+                    <div class="code-block">
+                        <code>pip install mikmbr</code>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Scan</h3>
+                    <div class="code-block">
+                        <code>mikmbr scan .</code>
+                    </div>
+                </div>
+
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Fix Issues</h3>
+                    <div class="code-block">
+                        <code>mikmbr scan . --verbose</code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="advanced-usage">
+                <h3>Advanced Usage</h3>
+                <div class="usage-grid">
+                    <div class="usage-example">
+                        <h4>JSON Output (CI/CD)</h4>
+                        <code>mikmbr scan . --format json</code>
+                    </div>
+                    <div class="usage-example">
+                        <h4>Custom Config</h4>
+                        <code>mikmbr scan . --config .mikmbr.yaml</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detection Rules Section -->
+    <section id="rules" class="rules">
+        <div class="container">
+            <h2>17 Detection Rules</h2>
+            <p class="section-subtitle">Comprehensive coverage of OWASP Top 10 2021</p>
+
+            <div class="rules-grid">
+                <div class="rule-card">
+                    <div class="rule-severity critical">CRITICAL</div>
+                    <h3>Template Injection</h3>
+                    <p>Detects SSTI vulnerabilities in Jinja2, Mako, Django templates</p>
+                    <span class="rule-tag">CWE-94</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity high">HIGH</div>
+                    <h3>SQL Injection</h3>
+                    <p>String concatenation, f-strings, unsafe ORM queries</p>
+                    <span class="rule-tag">CWE-89</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity high">HIGH</div>
+                    <h3>Command Injection</h3>
+                    <p>os.system(), subprocess with shell=True</p>
+                    <span class="rule-tag">CWE-78</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity high">HIGH</div>
+                    <h3>Hardcoded Secrets</h3>
+                    <p>Smart detection: patterns, entropy, variable names</p>
+                    <span class="rule-tag">CWE-798</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity high">HIGH</div>
+                    <h3>SSRF</h3>
+                    <p>Server-Side Request Forgery in requests, urllib</p>
+                    <span class="rule-tag">CWE-918</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity medium">MEDIUM</div>
+                    <h3>Open Redirect</h3>
+                    <p>Unvalidated redirects in Flask, Django, FastAPI</p>
+                    <span class="rule-tag">CWE-601</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity medium">MEDIUM</div>
+                    <h3>Timing Attack</h3>
+                    <p>Non-constant-time password/token comparisons</p>
+                    <span class="rule-tag">CWE-208</span>
+                </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity medium">MEDIUM</div>
+                    <h3>Log Injection</h3>
+                    <p>Unsanitized user input in logging statements</p>
+                    <span class="rule-tag">CWE-117</span>
+                </div>
+            </div>
+
+            <a href="https://github.com/yourusername/Mikmbr#detection-rules" class="btn btn-outline">View All 17 Rules</a>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases">
+        <div class="container">
+            <h2>Built For</h2>
+
+            <div class="use-case-grid">
+                <div class="use-case">
+                    <h3>👨‍💻 Developers</h3>
+                    <p>Catch vulnerabilities before they reach production. Integrate into your IDE or pre-commit hooks.</p>
+                </div>
+
+                <div class="use-case">
+                    <h3>🏢 Teams</h3>
+                    <p>Enforce security standards across your codebase. Configure rules per project.</p>
+                </div>
+
+                <div class="use-case">
+                    <h3>🤖 CI/CD</h3>
+                    <p>Automated security scanning in GitHub Actions, GitLab CI, Jenkins. Fail builds on critical issues.</p>
+                </div>
+
+                <div class="use-case">
+                    <h3>📚 Learners</h3>
+                    <p>Learn secure coding practices. Each finding includes CWE/OWASP references and fix suggestions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="final-cta">
+        <div class="container">
+            <h2>Start Scanning in 30 Seconds</h2>
+            <p>Free, open source, and runs entirely offline.</p>
+            <div class="code-block-large">
+                <code>pip install mikmbr && mikmbr scan .</code>
+            </div>
+            <div class="cta-buttons">
+                <a href="https://github.com/yourusername/Mikmbr" class="btn btn-primary">View on GitHub</a>
+                <a href="https://github.com/yourusername/Mikmbr#documentation" class="btn btn-secondary">Read Documentation</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#features">Features</a>
+                    <a href="#rules">Detection Rules</a>
+                    <a href="https://github.com/yourusername/Mikmbr/blob/main/CHANGELOG.md">Changelog</a>
+                    <a href="https://github.com/yourusername/Mikmbr/blob/main/ROADMAP.md">Roadmap</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Resources</h4>
+                    <a href="https://github.com/yourusername/Mikmbr#documentation">Documentation</a>
+                    <a href="https://github.com/yourusername/Mikmbr/blob/main/CONFIGURATION.md">Configuration Guide</a>
+                    <a href="https://github.com/yourusername/Mikmbr/issues">Report Issues</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <a href="https://github.com/yourusername/Mikmbr">GitHub</a>
+                    <a href="https://twitter.com/yourusername">Twitter</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="https://github.com/yourusername/Mikmbr/blob/main/LICENSE">MIT License</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Mikmbr. Open source security scanner for Python.</p>
+                <p>Made with ❤️ for the Python community</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

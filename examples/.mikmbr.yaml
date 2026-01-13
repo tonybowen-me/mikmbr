@@ -1,0 +1,17 @@
+# Minimal mikmbr configuration example
+
+version: "1.4"
+
+# Disable specific rules
+rules:
+  REGEX_DOS: false      # Skip regex DOS checks
+
+# Configure secret detection
+secret_detection:
+  entropy:
+    min_entropy: 3.0    # More sensitive detection
+
+# Output settings
+output:
+  format: human
+  verbose: true

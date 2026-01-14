@@ -67,7 +67,7 @@ Let's test different thresholds:
     # Test 1: Fail on CRITICAL only (should pass - no CRITICAL findings)
     print_subheader("Test 1: --fail-on critical")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on critical",
+        f"py -m mikmbr.cli scan {test_file} --fail-on critical",
         "Should EXIT 0 (pass) - file has no CRITICAL findings"
     )
     assert exit_code == 0, "Expected exit code 0 for --fail-on critical"
@@ -76,7 +76,7 @@ Let's test different thresholds:
     # Test 2: Fail on HIGH or above (should fail - has HIGH finding)
     print_subheader("Test 2: --fail-on high")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on high",
+        f"py -m mikmbr.cli scan {test_file} --fail-on high",
         "Should EXIT 1 (fail) - file has HIGH SQL injection"
     )
     assert exit_code == 1, "Expected exit code 1 for --fail-on high"
@@ -85,7 +85,7 @@ Let's test different thresholds:
     # Test 3: Fail on MEDIUM or above (should fail - has MEDIUM and HIGH)
     print_subheader("Test 3: --fail-on medium")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on medium",
+        f"py -m mikmbr.cli scan {test_file} --fail-on medium",
         "Should EXIT 1 (fail) - file has MEDIUM and HIGH findings"
     )
     assert exit_code == 1, "Expected exit code 1 for --fail-on medium"
@@ -94,7 +94,7 @@ Let's test different thresholds:
     # Test 4: Fail on any finding (default behavior)
     print_subheader("Test 4: --fail-on low (default)")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on low",
+        f"py -m mikmbr.cli scan {test_file} --fail-on low",
         "Should EXIT 1 (fail) - file has findings of all severities"
     )
     assert exit_code == 1, "Expected exit code 1 for --fail-on low"
@@ -103,7 +103,7 @@ Let's test different thresholds:
     # Test 5: Default behavior (no --fail-on flag)
     print_subheader("Test 5: Default (no --fail-on flag)")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file}",
+        f"py -m mikmbr.cli scan {test_file}",
         "Should EXIT 1 (fail) - default is fail on any finding"
     )
     assert exit_code == 1, "Expected exit code 1 for default"
@@ -127,28 +127,28 @@ Let's test different context sizes:
     # Test 1: No context (default)
     print_subheader("Test 1: No context (default)")
     run_command(
-        f"python -m mikmbr.cli scan {test_file}",
+        f"py -m mikmbr.cli scan {test_file}",
         "Default output - no context lines shown"
     )
 
     # Test 2: 1 line of context
     print_subheader("Test 2: --context 1")
     run_command(
-        f"python -m mikmbr.cli scan {test_file} --context 1",
+        f"py -m mikmbr.cli scan {test_file} --context 1",
         "Shows 1 line before and after each finding"
     )
 
     # Test 3: 3 lines of context (recommended)
     print_subheader("Test 3: --context 3 (recommended)")
     run_command(
-        f"python -m mikmbr.cli scan {test_file} --context 3",
+        f"py -m mikmbr.cli scan {test_file} --context 3",
         "Shows 3 lines before and after - good balance"
     )
 
     # Test 4: 5 lines of context
     print_subheader("Test 4: --context 5")
     run_command(
-        f"python -m mikmbr.cli scan {test_file} --context 5",
+        f"py -m mikmbr.cli scan {test_file} --context 5",
         "Shows 5 lines before and after - detailed view"
     )
 
@@ -168,7 +168,7 @@ Real-world usage: Combining both features for CI/CD
     # Example 1: CI/CD with HIGH threshold and context
     print_subheader("CI/CD Example: Fail on HIGH+ with context for debugging")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on high --context 2",
+        f"py -m mikmbr.cli scan {test_file} --fail-on high --context 2",
         "Block PRs on HIGH+ severity, show context for easy review"
     )
     print(f"Build would {'FAIL ❌' if exit_code == 1 else 'PASS ✅'}")
@@ -176,7 +176,7 @@ Real-world usage: Combining both features for CI/CD
     # Example 2: Local development with CRITICAL threshold and more context
     print_subheader("Local Dev Example: Only warn on CRITICAL with detailed context")
     exit_code = run_command(
-        f"python -m mikmbr.cli scan {test_file} --fail-on critical --context 5",
+        f"py -m mikmbr.cli scan {test_file} --fail-on critical --context 5",
         "Don't block local work, but show detailed context for all findings"
     )
     print(f"Local scan would {'FAIL ❌' if exit_code == 1 else 'PASS ✅'}")
@@ -206,7 +206,7 @@ def render_user_template():
 
         # Scan and check for CRITICAL
         result = subprocess.run(
-            f"python -m mikmbr.cli scan {test_file} --format json",
+            f"py -m mikmbr.cli scan {test_file} --format json",
             shell=True,
             capture_output=True,
             text=True
@@ -217,14 +217,14 @@ def render_user_template():
             print("\nSample output:")
             # Show human format for readability
             subprocess.run(
-                f"python -m mikmbr.cli scan {test_file}",
+                f"py -m mikmbr.cli scan {test_file}",
                 shell=True
             )
 
             # Test that it fails on critical threshold
             print_subheader("Test: --fail-on critical should FAIL")
             exit_code = run_command(
-                f"python -m mikmbr.cli scan {test_file} --fail-on critical",
+                f"py -m mikmbr.cli scan {test_file} --fail-on critical",
                 "Should EXIT 1 - has CRITICAL template injection"
             )
 

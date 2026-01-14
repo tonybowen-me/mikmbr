@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Mikmbr Security Scanner</title>
+    <meta name="description" content="Complete guide to using Mikmbr - Python security scanner with 25+ detection rules, CI/CD integration, and framework-specific checks.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .docs-nav {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .docs-nav h3 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        .docs-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .docs-nav li {
+            margin: 8px 0;
+        }
+
+        .docs-nav a {
+            color: #1e40af;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .docs-nav a:hover {
+            color: #2563eb;
+        }
+
+        .docs-section {
+            margin-bottom: 50px;
+            scroll-margin-top: 80px;
+        }
+
+        .docs-section h2 {
+            color: #1e293b;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .docs-section h3 {
+            color: #334155;
+            margin-top: 30px;
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .code-block code {
+            color: #e2e8f0;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-critical {
+            background: #dc2626;
+            color: white;
+        }
+
+        .severity-high {
+            background: #ea580c;
+            color: white;
+        }
+
+        .severity-medium {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .severity-low {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #2563eb;
+        }
+
+        .feature-item h4 {
+            margin-top: 0;
+            color: #2563eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .note {
+            background: #dbeafe;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Mikmbr</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html" style="color: #2563eb;">Documentation</a>
+                <a href="https://github.com/tonybowen-me/Mikmbr" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="docs-container">
+        <!-- Quick Navigation -->
+        <div class="docs-nav">
+            <h3>📚 Quick Navigation</h3>
+            <ul>
+                <li><a href="#quickstart">Quick Start</a></li>
+                <li><a href="#installation">Installation</a></li>
+                <li><a href="#basic-usage">Basic Usage</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#cicd">CI/CD Integration</a></li>
+                <li><a href="#configuration">Configuration</a></li>
+                <li><a href="#rules">Detection Rules</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#troubleshooting">Troubleshooting</a></li>
+            </ul>
+        </div>
+
+        <!-- Quick Start -->
+        <section id="quickstart" class="docs-section">
+            <h2>🚀 Quick Start</h2>
+            <p>Get started with Mikmbr in under 2 minutes:</p>
+
+            <div class="code-block"><code># Install
+pip install mikmbr
+
+# Scan your code
+mikmbr scan .
+
+# See results with context
+mikmbr scan . --context 3</code></div>
+        </section>
+
+        <!-- Installation -->
+        <section id="installation" class="docs-section">
+            <h2>📦 Installation</h2>
+
+            <h3>Via pip (Recommended)</h3>
+            <div class="code-block"><code>pip install mikmbr</code></div>
+
+            <h3>From Source</h3>
+            <div class="code-block"><code>git clone https://github.com/tonybowen-me/Mikmbr
+cd Mikmbr
+pip install -e .</code></div>
+
+            <h3>Requirements</h3>
+            <ul>
+                <li>Python 3.9 or higher</li>
+                <li>pyyaml >= 6.0</li>
+            </ul>
+        </section>
+
+        <!-- Basic Usage -->
+        <section id="basic-usage" class="docs-section">
+            <h2>💻 Basic Usage</h2>
+
+            <h3>Scan a File</h3>
+            <div class="code-block"><code>mikmbr scan myfile.py</code></div>
+
+            <h3>Scan a Directory</h3>
+            <div class="code-block"><code>mikmbr scan /path/to/project</code></div>
+
+            <h3>Scan Current Directory</h3>
+            <div class="code-block"><code>mikmbr scan .</code></div>
+
+            <h3>Output Formats</h3>
+            <div class="code-block"><code># Human-readable (default)
+mikmbr scan . --format human
+
+# JSON format
+mikmbr scan . --format json
+
+# SARIF (for GitHub Code Scanning)
+mikmbr scan . --format sarif</code></div>
+        </section>
+
+        <!-- Features -->
+        <section id="features" class="docs-section">
+            <h2>✨ Features (v1.7)</h2>
+
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>🚦 Exit Code Control</h4>
+                    <p>Control when CI/CD builds fail with <code>--fail-on</code></p>
+                    <div class="code-block"><code>mikmbr scan . --fail-on high</code></div>
+                </div>
+
+                <div class="feature-item">
+                    <h4>📄 Code Context</h4>
+                    <p>See surrounding code with <code>--context</code></p>
+                    <div class="code-block"><code>mikmbr scan . --context 3</code></div>
+                </div>
+
+                <div class="feature-item">
+                    <h4>🔕 Inline Suppression</h4>
+                    <p>Mark false positives</p>
+                    <div class="code-block"><code># mikmbr: ignore[SQL_INJECTION]
+query = build_query()</code></div>
+                </div>
+
+                <div class="feature-item">
+                    <h4>🎯 Framework Rules</h4>
+                    <p>Django, Flask, FastAPI specific checks</p>
+                </div>
+            </div>
+
+            <h3>Exit Code Configuration</h3>
+            <p>Control when builds fail based on severity:</p>
+            <table>
+                <tr>
+                    <th>Flag</th>
+                    <th>Fails On</th>
+                    <th>Use Case</th>
+                </tr>
+                <tr>
+                    <td><code>--fail-on critical</code></td>
+                    <td><span class="severity-badge severity-critical">CRITICAL</span> only</td>
+                    <td>Legacy codebases</td>
+                </tr>
+                <tr>
+                    <td><code>--fail-on high</code></td>
+                    <td><span class="severity-badge severity-critical">CRITICAL</span> <span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Pull requests</td>
+                </tr>
+                <tr>
+                    <td><code>--fail-on medium</code></td>
+                    <td><span class="severity-badge severity-critical">CRITICAL</span> <span class="severity-badge severity-high">HIGH</span> <span class="severity-badge severity-medium">MEDIUM</span></td>
+                    <td>Main branch</td>
+                </tr>
+                <tr>
+                    <td><code>--fail-on low</code></td>
+                    <td>All severities</td>
+                    <td>Strict enforcement</td>
+                </tr>
+            </table>
+
+            <h3>Code Context Lines</h3>
+            <p>Show surrounding code for better understanding:</p>
+            <div class="code-block"><code>mikmbr scan app.py --context 3</code></div>
+
+            <p><strong>Output example:</strong></p>
+            <div class="code-block"><code>[HIGH] app.py:42
+  Rule: SQL_INJECTION
+  Code:
+     40 |     conn = sqlite3.connect('db.sqlite')
+     41 |     cursor = conn.cursor()
+  >  42 |     query = f"SELECT * FROM users WHERE id = {user_id}"
+     43 |     cursor.execute(query)
+     44 |     return cursor.fetchone()</code></div>
+        </section>
+
+        <!-- CI/CD Integration -->
+        <section id="cicd" class="docs-section">
+            <h2>🔄 CI/CD Integration</h2>
+
+            <h3>GitHub Actions</h3>
+            <div class="code-block"><code>name: Security Scan
+on: [push, pull_request]
+
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Mikmbr
+        run: pip install mikmbr
+
+      - name: Run Security Scan
+        run: mikmbr scan . --fail-on high --format json</code></div>
+
+            <h3>GitHub Code Scanning (SARIF)</h3>
+            <div class="code-block"><code>- name: Security Scan
+  run: mikmbr scan . --format sarif > results.sarif
+
+- name: Upload SARIF
+  uses: github/codeql-action/upload-sarif@v2
+  with:
+    sarif_file: results.sarif</code></div>
+
+            <h3>GitLab CI</h3>
+            <div class="code-block"><code>security_scan:
+  image: python:3.9
+  script:
+    - pip install mikmbr
+    - mikmbr scan . --fail-on high --format json
+  allow_failure: false</code></div>
+
+            <h3>Pre-commit Hook</h3>
+            <div class="code-block"><code># .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: mikmbr
+        name: Mikmbr Security Scan
+        entry: mikmbr scan --context 2 --fail-on high
+        language: system
+        pass_filenames: false</code></div>
+        </section>
+
+        <!-- Configuration -->
+        <section id="configuration" class="docs-section">
+            <h2>⚙️ Configuration</h2>
+
+            <h3>Configuration File</h3>
+            <p>Create <code>.mikmbr.yaml</code> in your project root:</p>
+            <div class="code-block"><code>exclude:
+  - "tests/"
+  - "venv/"
+  - "*.min.js"
+
+rules:
+  SQL_INJECTION:
+    enabled: true
+    severity: HIGH
+
+  HARDCODED_SECRET:
+    enabled: true
+    severity: HIGH
+
+output:
+  format: human
+  verbose: false</code></div>
+
+            <h3>Command Line Options</h3>
+            <table>
+                <tr>
+                    <th>Option</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>--format</code></td>
+                    <td>Output format (human, json, sarif)</td>
+                    <td><code>--format json</code></td>
+                </tr>
+                <tr>
+                    <td><code>--verbose</code></td>
+                    <td>Show detailed information</td>
+                    <td><code>--verbose</code></td>
+                </tr>
+                <tr>
+                    <td><code>--fail-on</code></td>
+                    <td>Exit code threshold</td>
+                    <td><code>--fail-on high</code></td>
+                </tr>
+                <tr>
+                    <td><code>--context</code></td>
+                    <td>Show N lines around findings</td>
+                    <td><code>--context 3</code></td>
+                </tr>
+                <tr>
+                    <td><code>--config</code></td>
+                    <td>Path to config file</td>
+                    <td><code>--config .mikmbr.yaml</code></td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- Detection Rules -->
+        <section id="rules" class="docs-section">
+            <h2>🔍 Detection Rules (25+)</h2>
+
+            <h3>Core Security Rules (21)</h3>
+            <table>
+                <tr>
+                    <th>Rule</th>
+                    <th>Severity</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td>TEMPLATE_INJECTION</td>
+                    <td><span class="severity-badge severity-critical">CRITICAL</span></td>
+                    <td>Server-Side Template Injection (SSTI)</td>
+                </tr>
+                <tr>
+                    <td>SQL_INJECTION</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>SQL injection vulnerabilities</td>
+                </tr>
+                <tr>
+                    <td>COMMAND_INJECTION</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>OS command injection</td>
+                </tr>
+                <tr>
+                    <td>DANGEROUS_EXEC</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Use of eval(), exec(), compile()</td>
+                </tr>
+                <tr>
+                    <td>HARDCODED_SECRET</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Hardcoded passwords, API keys, tokens</td>
+                </tr>
+                <tr>
+                    <td>SSRF</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Server-Side Request Forgery</td>
+                </tr>
+                <tr>
+                    <td>PATH_TRAVERSAL</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Directory traversal attacks</td>
+                </tr>
+                <tr>
+                    <td>WEAK_CRYPTO</td>
+                    <td><span class="severity-badge severity-medium">MEDIUM</span></td>
+                    <td>Weak cryptographic algorithms (MD5, SHA1)</td>
+                </tr>
+                <tr>
+                    <td>INSECURE_DESERIALIZATION</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Unsafe pickle, yaml.load()</td>
+                </tr>
+                <tr>
+                    <td>XSS</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>Cross-Site Scripting</td>
+                </tr>
+            </table>
+
+            <h3>Framework-Specific Rules</h3>
+
+            <h4>Django (6 rules)</h4>
+            <ul>
+                <li>Raw SQL queries</li>
+                <li>mark_safe() usage</li>
+                <li>DEBUG=True in production</li>
+                <li>Hardcoded SECRET_KEY</li>
+                <li>Extra() SQL injection</li>
+                <li>Safe string bypass</li>
+            </ul>
+
+            <h4>Flask (6 rules)</h4>
+            <ul>
+                <li>send_file() path traversal</li>
+                <li>render_template_string() SSTI</li>
+                <li>Debug mode enabled</li>
+                <li>Insecure cookie settings</li>
+                <li>Session configuration</li>
+                <li>CORS misconfiguration</li>
+            </ul>
+
+            <h4>FastAPI (5 rules)</h4>
+            <ul>
+                <li>Missing input validation</li>
+                <li>Path traversal in file endpoints</li>
+                <li>CORS allow all origins</li>
+                <li>Dangerous dependencies</li>
+                <li>Insecure JWT configuration</li>
+            </ul>
+        </section>
+
+        <!-- Examples -->
+        <section id="examples" class="docs-section">
+            <h2>📝 Examples</h2>
+
+            <h3>Example 1: Local Development</h3>
+            <div class="code-block"><code># See all issues with context
+mikmbr scan . --context 3 --verbose</code></div>
+
+            <h3>Example 2: Pull Request Check</h3>
+            <div class="code-block"><code># Fail on HIGH+ issues, show context
+mikmbr scan . --fail-on high --context 2</code></div>
+
+            <h3>Example 3: Gradual Adoption</h3>
+            <div class="code-block"><code># Week 1: Only block CRITICAL
+mikmbr scan . --fail-on critical
+
+# Month 2: Tighten to HIGH
+mikmbr scan . --fail-on high
+
+# Month 6: Full enforcement
+mikmbr scan . --fail-on medium</code></div>
+
+            <h3>Example 4: Suppressing False Positives</h3>
+            <div class="code-block"><code># Suppress specific rule
+# mikmbr: ignore[SQL_INJECTION]
+query = build_safe_query(user_input)
+
+# Suppress multiple rules
+# mikmbr: ignore[SQL_INJECTION, COMMAND_INJECTION]
+execute_query(sanitized_input)</code></div>
+
+            <h3>Example 5: JSON Output for Automation</h3>
+            <div class="code-block"><code>mikmbr scan . --format json > results.json
+
+# Process with jq
+mikmbr scan . --format json | jq '.findings[] | select(.severity == "HIGH")'</code></div>
+        </section>
+
+        <!-- Troubleshooting -->
+        <section id="troubleshooting" class="docs-section">
+            <h2>🔧 Troubleshooting</h2>
+
+            <h3>Common Issues</h3>
+
+            <div class="warning">
+                <strong>⚠️ "No module named 'mikmbr'"</strong>
+                <p>Solution: Ensure mikmbr is installed: <code>pip install mikmbr</code></p>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ "SyntaxError: invalid syntax"</strong>
+                <p>Solution: Mikmbr requires Python 3.9+. Check version: <code>python --version</code></p>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Too many false positives</strong>
+                <p>Solution: Use inline suppression or adjust config:</p>
+                <div class="code-block"><code># Suppress in code
+# mikmbr: ignore[RULE_ID]
+
+# Or disable in config
+rules:
+  RULE_ID:
+    enabled: false</code></div>
+            </div>
+
+            <h3>Performance Tips</h3>
+            <ul>
+                <li>Exclude virtual environments and dependencies: <code>exclude: ["venv/", "node_modules/"]</code></li>
+                <li>Use <code>--context 0</code> for faster CI/CD</li>
+                <li>Scan specific directories instead of entire project</li>
+            </ul>
+
+            <h3>Getting Help</h3>
+            <div class="note">
+                <ul>
+                    <li>📖 Check the <a href="https://github.com/tonybowen-me/Mikmbr">GitHub README</a></li>
+                    <li>🐛 Report issues on <a href="https://github.com/tonybowen-me/Mikmbr/issues">GitHub Issues</a></li>
+                    <li>💬 Ask questions in <a href="https://github.com/tonybowen-me/Mikmbr/discussions">Discussions</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Testing -->
+        <section id="testing" class="docs-section">
+            <h2>🧪 Testing Mikmbr</h2>
+
+            <h3>Quick Test</h3>
+            <p>Create a test file to verify Mikmbr is working:</p>
+            <div class="code-block"><code># test_security.py
+import sqlite3
+
+# This should trigger SQL_INJECTION
+def get_user(user_id):
+    conn = sqlite3.connect('db.sqlite')
+    cursor = conn.cursor()
+    query = f"SELECT * FROM users WHERE id = {user_id}"
+    cursor.execute(query)
+    return cursor.fetchone()</code></div>
+
+            <p>Run scan:</p>
+            <div class="code-block"><code>mikmbr scan test_security.py --context 2</code></div>
+
+            <p>Expected output:</p>
+            <div class="code-block"><code>[HIGH] test_security.py:8
+  Rule: SQL_INJECTION
+  Issue: SQL query built with string concatenation
+  Fix: Use parameterized queries
+  Code:
+       6 |     conn = sqlite3.connect('db.sqlite')
+       7 |     cursor = conn.cursor()
+  >    8 |     query = f"SELECT * FROM users WHERE id = {user_id}"
+       9 |     cursor.execute(query)
+      10 |     return cursor.fetchone()</code></div>
+        </section>
+
+        <!-- Version Info -->
+        <section class="docs-section">
+            <h2>📦 Version Information</h2>
+            <p><strong>Current Version:</strong> 1.7.0</p>
+            <p><strong>Release Date:</strong> January 2026</p>
+
+            <h3>What's New in v1.7</h3>
+            <ul>
+                <li>🚦 Exit code configuration (<code>--fail-on</code>)</li>
+                <li>📄 Code context lines (<code>--context</code>)</li>
+                <li>⚡ CRITICAL severity level</li>
+                <li>🔧 SARIF v2.1 with CRITICAL support</li>
+            </ul>
+
+            <p><a href="https://github.com/tonybowen-me/Mikmbr/blob/main/CHANGELOG.md">View Full Changelog →</a></p>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Mikmbr</h3>
+                    <p>Fast, deterministic security scanner for Python</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <a href="docs.html">Documentation</a>
+                    <a href="https://github.com/tonybowen-me/Mikmbr">GitHub</a>
+                    <a href="https://github.com/tonybowen-me/Mikmbr/blob/main/CHANGELOG.md">Changelog</a>
+                </div>
+                <div class="footer-section">
+                    <h3>Community</h3>
+                    <a href="https://github.com/tonybowen-me/Mikmbr/issues">Report Issues</a>
+                    <a href="https://github.com/tonybowen-me/Mikmbr/discussions">Discussions</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Mikmbr. Open Source Security Scanner.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

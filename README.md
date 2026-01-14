@@ -53,7 +53,7 @@ pip install mikmbr
 
 For development:
 ```bash
-git clone https://github.com/yourusername/Mikmbr.git
+git clone https://github.com/tonybowen-me/Mikmbr.git
 cd mikmbr
 pip install -e ".[dev]"
 ```
@@ -354,7 +354,7 @@ MIT License - see [LICENSE](LICENSE) for details
 
 ## Credits
 
-Built by Tony. Contributions welcome on [GitHub](https://github.com/yourusername/Mikmbr).
+Built by Tony. Contributions welcome on [GitHub](https://github.com/tonybowen-me/Mikmbr).
 
 ---
 

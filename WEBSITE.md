@@ -190,10 +190,10 @@ repos:
 
 mikmbr is **MIT licensed** and fully open source.
 
-- 📖 [Documentation](https://github.com/yourusername/Mikmbr)
-- 🐛 [Report Issues](https://github.com/yourusername/Mikmbr/issues)
-- 💡 [Contribute](https://github.com/yourusername/Mikmbr/blob/main/CONTRIBUTING.md)
-- ⭐ [Star on GitHub](https://github.com/yourusername/Mikmbr)
+- 📖 [Documentation](https://github.com/tonybowen-me/Mikmbr)
+- 🐛 [Report Issues](https://github.com/tonybowen-me/Mikmbr/issues)
+- 💡 [Contribute](https://github.com/tonybowen-me/Mikmbr/blob/main/CONTRIBUTING.md)
+- ⭐ [Star on GitHub](https://github.com/tonybowen-me/Mikmbr)
 
 ---
 

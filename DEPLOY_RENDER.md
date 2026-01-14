@@ -131,7 +131,7 @@ Before going live, verify:
 
 After deployment:
 
-1. **Update GitHub URLs**: Replace all `https://github.com/yourusername/Mikmbr` with your actual repository URL
+1. **Update GitHub URLs**: Replace all `https://github.com/tonybowen-me/Mikmbr` with your actual repository URL
 2. **Add Analytics**: Insert tracking code if you want visitor analytics
 3. **Submit to Search Engines**:
    - Google Search Console

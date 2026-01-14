@@ -5,8 +5,8 @@ Use this checklist before deploying to production (hookcrate.io).
 ## Pre-Deployment Tasks
 
 ### 1. Update GitHub URLs
-- [ ] Replace all `https://github.com/yourusername/Mikmbr` in website/index.html
-- [ ] Replace all `https://github.com/yourusername/Mikmbr` in README.md
+- [ ] Replace all `https://github.com/tonybowen-me/Mikmbr` in website/index.html
+- [ ] Replace all `https://github.com/tonybowen-me/Mikmbr` in README.md
 - [ ] Update footer links in website/index.html
 
 ### 2. Update Social Links

@@ -156,6 +156,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Links
 
-- [GitHub Repository](https://github.com/yourusername/Mikmbr)
+- [GitHub Repository](https://github.com/tonybowen-me/Mikmbr)
 - [Documentation](README.md)
-- [Issue Tracker](https://github.com/yourusername/Mikmbr/issues)
+- [Issue Tracker](https://github.com/tonybowen-me/Mikmbr/issues)

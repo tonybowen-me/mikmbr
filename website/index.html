@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mikmbr - Python Security Scanner | Find Vulnerabilities Instantly</title>
-    <meta name="description" content="Fast, open-source security scanner for Python. Detects 17 types of vulnerabilities including SQL injection, secrets, SSRF. OWASP Top 10 coverage.">
+    <meta name="description" content="Fast, open-source security scanner for Python. Detects 25+ types of vulnerabilities including SQL injection, secrets, SSRF. Framework-specific rules for Django, Flask, FastAPI.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -25,11 +25,11 @@
     <section class="hero">
         <div class="container">
             <h1>Find Security Vulnerabilities in Python Code. <span class="highlight">Instantly.</span></h1>
-            <p class="subtitle">Fast, deterministic security scanner powered by AST analysis. 17 detection rules covering OWASP Top 10.</p>
+            <p class="subtitle">Fast, deterministic security scanner powered by AST analysis. 25+ detection rules with framework-specific checks for Django, Flask, and FastAPI.</p>
 
             <div class="hero-stats">
                 <div class="stat">
-                    <div class="stat-number">17</div>
+                    <div class="stat-number">25+</div>
                     <div class="stat-label">Detection Rules</div>
                 </div>
                 <div class="stat">
@@ -75,7 +75,7 @@ Found 3 security issue(s):
                 <div class="feature-card">
                     <div class="feature-icon">🔍</div>
                     <h3>Comprehensive Detection</h3>
-                    <p>17 security rules covering SQL injection, command injection, hardcoded secrets, SSRF, template injection, and more.</p>
+                    <p>25+ security rules covering SQL injection, command injection, hardcoded secrets, SSRF, template injection, plus framework-specific checks for Django, Flask, and FastAPI.</p>
                 </div>
 
                 <div class="feature-card">
@@ -161,8 +161,8 @@ Found 3 security issue(s):
     <!-- Detection Rules Section -->
     <section id="rules" class="rules">
         <div class="container">
-            <h2>17 Detection Rules</h2>
-            <p class="section-subtitle">Comprehensive coverage of OWASP Top 10 2021</p>
+            <h2>25+ Detection Rules</h2>
+            <p class="section-subtitle">Comprehensive coverage of OWASP Top 10 2021 + Framework-Specific Checks</p>
 
             <div class="rules-grid">
                 <div class="rule-card">
@@ -222,7 +222,78 @@ Found 3 security issue(s):
                 </div>
             </div>
 
-            <a href="https://github.com/tonybowen-me/Mikmbr#detection-rules" class="btn btn-outline">View All 17 Rules</a>
+            <a href="https://github.com/tonybowen-me/Mikmbr#detection-rules" class="btn btn-outline">View All 25+ Rules</a>
+        </div>
+    </section>
+
+    <!-- New Features Section -->
+    <section class="new-features">
+        <div class="container">
+            <h2>What's New in v1.7</h2>
+            <p class="section-subtitle">CI/CD control and better developer experience</p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🚦</div>
+                    <h3>Exit Code Configuration</h3>
+                    <p>Control when builds fail with <code>--fail-on</code>:</p>
+                    <div class="code-block" style="margin-top: 10px;">
+                        <code>mikmbr scan . --fail-on high</code>
+                    </div>
+                    <p style="margin-top: 8px;">Perfect for gradual security adoption in legacy codebases.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>Code Context Lines</h3>
+                    <p>See surrounding code with <code>--context N</code>:</p>
+                    <div class="code-block" style="margin-top: 10px;">
+                        <code>mikmbr scan . --context 3</code>
+                    </div>
+                    <p style="margin-top: 8px;">Understand issues without opening files.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>CRITICAL Severity</h3>
+                    <p>New severity level for immediate RCE threats like Server-Side Template Injection.</p>
+                    <p style="margin-top: 8px;"><strong>4 severity levels:</strong> CRITICAL, HIGH, MEDIUM, LOW</p>
+                </div>
+            </div>
+
+            <details style="margin-top: 30px;">
+                <summary style="cursor: pointer; font-weight: 600; font-size: 1.1em;">Previous Release - v1.6</summary>
+                <div style="margin-top: 20px;">
+                    <p class="section-subtitle">Framework-specific rules and GitHub integration</p>
+                    <div class="feature-grid" style="margin-top: 20px;">
+                        <div class="feature-card">
+                            <div class="feature-icon">🎯</div>
+                            <h3>Framework-Specific Rules</h3>
+                            <p><strong>Django (6 rules)</strong> - Raw SQL, mark_safe(), DEBUG=True, SECRET_KEY</p>
+                            <p><strong>Flask (6 rules)</strong> - send_file(), SSTI, debug mode, cookie security</p>
+                            <p><strong>FastAPI (5 rules)</strong> - Input validation, path traversal, CORS</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon">🔕</div>
+                            <h3>Inline Suppression</h3>
+                            <p>Mark false positives with comments:</p>
+                            <div class="code-block" style="margin-top: 10px;">
+                                <code># mikmbr: ignore[RULE_ID]</code>
+                            </div>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon">🔗</div>
+                            <h3>GitHub Code Scanning</h3>
+                            <p>SARIF output format for native GitHub integration:</p>
+                            <div class="code-block" style="margin-top: 10px;">
+                                <code>mikmbr scan . --format sarif</code>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </details>
         </div>
     </section>
 

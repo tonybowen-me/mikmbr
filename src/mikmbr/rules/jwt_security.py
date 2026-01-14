@@ -2,8 +2,8 @@
 
 import ast
 from typing import List
-from .base import Rule, RuleSeverity
-from ..models import Finding
+from .base import Rule
+from ..models import Finding, Severity
 
 
 class JWTSecurityRule(Rule):
@@ -21,7 +21,7 @@ class JWTSecurityRule(Rule):
     """
 
     rule_id = "JWT_SECURITY"
-    severity = RuleSeverity.HIGH
+    severity = Severity.HIGH
     cwe_id = "CWE-347"
     owasp_category = "A02:2021 - Cryptographic Failures"
 
@@ -76,7 +76,7 @@ class JWTSecurityRule(Rule):
                 if kwargs['algorithm'].value in self.WEAK_ALGORITHMS:
                     return Finding(
                         rule_id=self.rule_id,
-                        severity=RuleSeverity.CRITICAL,
+                        severity=Severity.CRITICAL,
                         filename=filename,
                         line_number=node.lineno,
                         message=f"JWT uses insecure algorithm: {kwargs['algorithm'].value}",
@@ -93,7 +93,7 @@ class JWTSecurityRule(Rule):
                 if secret_arg.value.lower() in self.WEAK_SECRETS or len(secret_arg.value) < 32:
                     return Finding(
                         rule_id=self.rule_id,
-                        severity=RuleSeverity.HIGH,
+                        severity=Severity.HIGH,
                         filename=filename,
                         line_number=node.lineno,
                         message="JWT uses weak or hardcoded secret",
@@ -115,7 +115,7 @@ class JWTSecurityRule(Rule):
                 if not kwargs['verify'].value:  # verify=False
                     return Finding(
                         rule_id=self.rule_id,
-                        severity=RuleSeverity.CRITICAL,
+                        severity=Severity.CRITICAL,
                         filename=filename,
                         line_number=node.lineno,
                         message="JWT signature verification disabled",
@@ -132,7 +132,7 @@ class JWTSecurityRule(Rule):
                     if isinstance(alg, ast.Constant) and alg.value == 'none':
                         return Finding(
                             rule_id=self.rule_id,
-                            severity=RuleSeverity.CRITICAL,
+                            severity=Severity.CRITICAL,
                             filename=filename,
                             line_number=node.lineno,
                             message="JWT allows 'none' algorithm - algorithm confusion vulnerability",

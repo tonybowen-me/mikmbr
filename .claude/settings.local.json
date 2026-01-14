@@ -16,7 +16,18 @@
       "Bash(test:*)",
       "Bash(grep:*)",
       "Bash(py -m pip install:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(python -c:*)",
+      "Bash(py:*)",
+      "Bash(where:*)",
+      "Bash(python validate_v17.py:*)",
+      "Bash(cmd.exe /c \"python --version\")",
+      "Bash(cmd.exe /c \"python -m pytest:*)",
+      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m pytest tests/test_exit_codes.py -v)",
+      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m pytest tests/test_exit_codes.py::TestExitCodeLogic::test_should_fail_on_critical_with_critical_finding -v)",
+      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m mikmbr.cli scan test_v17_features.py)",
+      "Bash(python -m mikmbr.cli scan:*)",
+      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m mikmbr.cli scan test_v17_features.py --context 2)"
     ]
   }
 }

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mikmbr"
-version = "1.5.0"
+version = "1.7.0"
 description = "Mikmbr - Security vulnerability detection for Python code"
 readme = "README.md"
 requires-python = ">=3.9"

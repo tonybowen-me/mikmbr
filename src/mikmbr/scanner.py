@@ -8,6 +8,7 @@ import fnmatch
 from .models import Finding
 from .rules import ALL_RULES
 from .config import MikmbrConfig
+from .utils.suppression import SuppressionParser
 
 
 class Scanner:
@@ -103,6 +104,9 @@ class Scanner:
             with open(filepath, 'r', encoding='utf-8') as f:
                 source = f.read()
 
+            # Parse suppression comments
+            suppression_parser = SuppressionParser(source)
+
             # Parse the AST
             try:
                 tree = ast.parse(source, filename=filepath)
@@ -130,7 +134,10 @@ class Scanner:
                         except KeyError:
                             pass  # Invalid severity in config, use original
 
-                    findings.extend(rule_findings)
+                    # Filter out suppressed findings
+                    for finding in rule_findings:
+                        if not suppression_parser.is_suppressed(finding.line, finding.rule_id):
+                            findings.append(finding)
 
         except Exception as e:
             # Skip files that can't be read

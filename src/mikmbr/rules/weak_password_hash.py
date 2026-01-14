@@ -2,8 +2,8 @@
 
 import ast
 from typing import List
-from .base import Rule, RuleSeverity
-from ..models import Finding
+from .base import Rule
+from ..models import Finding, Severity
 
 
 class WeakPasswordHashRule(Rule):
@@ -22,7 +22,7 @@ class WeakPasswordHashRule(Rule):
     """
 
     rule_id = "WEAK_PASSWORD_HASH"
-    severity = RuleSeverity.HIGH
+    severity = Severity.HIGH
     cwe_id = "CWE-916"
     owasp_category = "A02:2021 - Cryptographic Failures"
 

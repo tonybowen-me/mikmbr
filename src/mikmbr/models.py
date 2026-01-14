@@ -7,6 +7,7 @@ from typing import Optional, List
 
 class Severity(Enum):
     """Severity levels for security findings."""
+    CRITICAL = "CRITICAL"
     HIGH = "HIGH"
     MEDIUM = "MED"
     LOW = "LOW"

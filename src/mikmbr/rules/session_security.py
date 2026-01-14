@@ -2,8 +2,8 @@
 
 import ast
 from typing import List
-from .base import Rule, RuleSeverity
-from ..models import Finding
+from .base import Rule
+from ..models import Finding, Severity
 
 
 class SessionSecurityRule(Rule):
@@ -21,7 +21,7 @@ class SessionSecurityRule(Rule):
     """
 
     rule_id = "SESSION_SECURITY"
-    severity = RuleSeverity.MEDIUM
+    severity = Severity.MEDIUM
     cwe_id = "CWE-384"
     owasp_category = "A07:2021 - Identification and Authentication Failures"
 

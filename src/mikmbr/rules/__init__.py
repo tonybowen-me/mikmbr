@@ -22,6 +22,9 @@ from .weak_password_hash import WeakPasswordHashRule
 from .insecure_cookie import InsecureCookieRule
 from .jwt_security import JWTSecurityRule
 from .session_security import SessionSecurityRule
+from .django_security import DjangoSecurityRule
+from .flask_security import FlaskSecurityRule
+from .fastapi_security import FastAPISecurityRule
 
 # Registry of all available rules
 ALL_RULES = [
@@ -46,6 +49,9 @@ ALL_RULES = [
     InsecureCookieRule(),
     JWTSecurityRule(),
     SessionSecurityRule(),
+    DjangoSecurityRule(),
+    FlaskSecurityRule(),
+    FastAPISecurityRule(),
 ]
 
 __all__ = [

@@ -2,8 +2,8 @@
 
 import ast
 from typing import List
-from .base import Rule, RuleSeverity
-from ..models import Finding
+from .base import Rule
+from ..models import Finding, Severity
 
 
 class InsecureCookieRule(Rule):
@@ -18,7 +18,7 @@ class InsecureCookieRule(Rule):
     """
 
     rule_id = "INSECURE_COOKIE"
-    severity = RuleSeverity.MEDIUM
+    severity = Severity.MEDIUM
     cwe_id = "CWE-614"
     owasp_category = "A05:2021 - Security Misconfiguration"
 

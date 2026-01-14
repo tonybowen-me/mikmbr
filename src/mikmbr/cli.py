@@ -26,9 +26,9 @@ def main():
     )
     scan_parser.add_argument(
         "--format",
-        choices=["human", "json"],
+        choices=["human", "json", "sarif"],
         default=None,
-        help="Output format (default: from config or human)"
+        help="Output format: human (default), json, or sarif (for GitHub Code Scanning)"
     )
     scan_parser.add_argument(
         "--verbose", "-v",
@@ -39,6 +39,20 @@ def main():
     scan_parser.add_argument(
         "--config", "-c",
         help="Path to configuration file (default: search for .mikmbr.yaml)"
+    )
+    scan_parser.add_argument(
+        "--context",
+        type=int,
+        default=0,
+        metavar="N",
+        help="Show N lines of code context around each finding (default: 0)"
+    )
+    scan_parser.add_argument(
+        "--fail-on",
+        choices=["critical", "high", "medium", "low"],
+        default=None,
+        metavar="SEVERITY",
+        help="Exit with code 1 only if findings at this severity or higher are found"
     )
 
     args = parser.parse_args()
@@ -74,11 +88,33 @@ def main():
 
             # Use configuration for formatter
             formatter = get_formatter(config.output.format, verbose=config.output.verbose)
+
+            # Set context lines if specified
+            if hasattr(formatter, 'context'):
+                formatter.context = args.context
+
             output = formatter.format(findings)
             print(output)
 
-            # Exit with non-zero if findings were found
-            sys.exit(1 if findings else 0)
+            # Determine exit code based on --fail-on flag
+            should_fail = False
+            if findings:
+                if args.fail_on:
+                    # Exit 1 only if findings meet severity threshold
+                    from .models import Severity
+                    severity_levels = {
+                        "low": [Severity.LOW, Severity.MEDIUM, Severity.HIGH, Severity.CRITICAL],
+                        "medium": [Severity.MEDIUM, Severity.HIGH, Severity.CRITICAL],
+                        "high": [Severity.HIGH, Severity.CRITICAL],
+                        "critical": [Severity.CRITICAL]
+                    }
+                    threshold_severities = severity_levels[args.fail_on]
+                    should_fail = any(f.severity in threshold_severities for f in findings)
+                else:
+                    # Default: fail if any findings
+                    should_fail = True
+
+            sys.exit(1 if should_fail else 0)
 
         except Exception as e:
             print(f"Error: {e}", file=sys.stderr)

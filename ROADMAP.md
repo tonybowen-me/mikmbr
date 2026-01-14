@@ -1,176 +1,165 @@
-# mikmbr Expansion Roadmap
+# Mikmbr Development Roadmap
 
-## Completed Features
+## Completed Features ✅
 
-### ✅ v1.1 - Enhanced Verbosity (Option 1)
+### v1.1 - Enhanced Verbosity
 - Verbose output mode with `--verbose` flag
 - CWE IDs, OWASP mappings, and references
 - Code snippets in findings
 - Confidence levels (HIGH/MEDIUM/LOW)
 
-### ✅ v1.2 - Additional Detection Rules (Option 2)
+### v1.2 - Additional Detection Rules
 - INSECURE_DESERIALIZATION (pickle, yaml)
 - PATH_TRAVERSAL (unsafe file paths)
 - INSECURE_RANDOM (random for security)
 - REGEX_DOS (catastrophic backtracking)
 - XXE (XML external entities)
 
-### ✅ v1.3 - Smart Secret Detection (Option 3)
+### v1.3 - Smart Secret Detection
 - Entropy-based secret detection
 - Known pattern matching (AWS, GitHub, Slack, etc.)
 - Variable name-based detection
 - Test file auto-exclusion
 - Placeholder filtering
 
-### ✅ v1.4 - Configuration System (Option 4)
+### v1.4 - Configuration System
 - YAML-based configuration (`.mikmbr.yaml`)
 - Rule enable/disable and severity overrides
 - Secret detection tuning (entropy thresholds)
 - Custom placeholders and path exclusions
 - Output and scan configuration
 - Automatic config discovery
-- CLI overrides
 
-## Immediate Enhancements (v1.5+)
+### v1.5 - Extended Coverage
+- SSRF (Server-Side Request Forgery)
+- Open Redirect vulnerability detection
+- Log Injection detection
+- Template Injection (SSTI) detection
+- Timing Attack detection
+- Bare Except detection
+- Debug Code detection
 
-### 1. More Verbose Output Options
+### v1.6 - Production Features
+- **Inline Suppression System** - Mark false positives with comments
+- **Framework-Specific Rules** - Django, Flask, FastAPI detection (17 checks)
+- **SARIF Output Format** - GitHub Code Scanning integration
 
-**CLI Flags:**
-- `--verbose` / `-v`: Show additional context (code snippets, CWE IDs, OWASP references)
-- `--explain`: Detailed explanation of each finding with examples
-- `--confidence`: Show confidence level (HIGH/MEDIUM/LOW) for each detection
-- `--context N`: Show N lines of code context around each finding
+---
 
-**Enhanced Finding Model:**
+## Planned Features
+
+### High Priority
+
+#### 1. Exit Code Configuration
+```bash
+mikmbr scan . --fail-on high  # Exit 1 only on HIGH+ findings
+mikmbr scan . --fail-on critical  # Exit 1 only on CRITICAL
+```
+
+**Why:** Essential for CI/CD pipelines to control build failures
+
+#### 2. Basic Taint Tracking
 ```python
-@dataclass
-class Finding:
-    file: str
-    line: int
-    rule_id: str
-    severity: Severity
-    confidence: Confidence  # NEW
-    message: str
-    remediation: str
-    cwe_id: str            # NEW: CWE-89, CWE-78, etc.
-    owasp_category: str    # NEW: A03:2021-Injection
-    code_snippet: str      # NEW: Actual vulnerable code
-    references: List[str]  # NEW: Links to docs
+# Track data flow to reduce false positives
+user_id = request.GET['id']
+safe_id = int(user_id)  # Sanitized
+query = f"SELECT * FROM users WHERE id = {safe_id}"  # Should NOT flag
 ```
 
-### 2. Additional Detection Rules
-
-**Security Rules:**
-- `INSECURE_DESERIALIZATION`: pickle.loads(), yaml.load() without SafeLoader
-- `PATH_TRAVERSAL`: os.path.join() with user input, open() with concatenated paths
-- `XXE`: XML parsing without secure defaults (defusedxml)
-- `SSRF`: requests.get() with user-controlled URLs
-- `OPEN_REDIRECT`: redirect() with unvalidated user input
-- `INSECURE_RANDOM`: random.random() for security purposes instead of secrets module
-- `TIMING_ATTACK`: String comparison with == for secrets/tokens
-- `INSECURE_TEMP_FILE`: tempfile usage without proper cleanup
-- `MISSING_CRYPTO_SALT`: Hashing passwords without salt
-- `WEAK_TLS`: SSL/TLS version checks
-- `REGEX_DOS`: Catastrophic backtracking patterns
-- `LOG_INJECTION`: Logging user input without sanitization
-
-**Code Quality Rules:**
-- `BARE_EXCEPT`: except: without exception type
-- `ASSERT_IN_PROD`: assert statements (removed in -O mode)
-- `MUTABLE_DEFAULT_ARG`: def foo(x=[]):
-- `UNUSED_IMPORTS`: Imported but never used
-
-### 3. Enhanced SQL Injection Detection
-
-**Current:** Basic string concatenation
-**Enhanced:**
-- Track variable taint flow (if var comes from user input)
-- Detect ORM query construction (Django, SQLAlchemy)
-- Check for proper escaping functions
-- Detect second-order SQL injection patterns
-
-### 4. Smarter Secret Detection
-
-**Pattern Improvements:**
-- Entropy analysis (high-entropy strings likely secrets)
-- Known secret formats (AWS keys, GitHub tokens, JWT)
-- Git history scanning (detect committed secrets)
-- .env file checking
-- Base64-encoded secrets
-
-**Exclude False Positives:**
-- Test fixtures
-- Example/placeholder values
-- Comments with examples
-
-## Medium-Term Features (v1.2-1.3)
-
-### 5. Configuration File
-
-**`.mikmbr.yaml`:**
-```yaml
-rules:
-  enabled:
-    - DANGEROUS_EXEC
-    - SQL_INJECTION
-  disabled:
-    - WEAK_CRYPTO
-
-  HARDCODED_SECRET:
-    exclude_patterns:
-      - test_*
-      - */tests/*
-    custom_patterns:
-      - "CUSTOM_API_.*"
-
-severity_threshold: MEDIUM  # Only report MEDIUM and above
-
-output:
-  format: json
-  verbose: true
-  show_context: 3
-
-ignore:
-  paths:
-    - "*/migrations/*"
-    - "*/vendor/*"
-  files:
-    - "legacy_code.py"
-```
-
-### 6. Data Flow Analysis (Taint Tracking)
-
-**Basic Taint Analysis:**
-```python
-# Track if data originates from untrusted source
-user_input = request.GET['id']  # TAINTED
-safe_id = int(user_input)        # SANITIZED
-query = f"SELECT * FROM users WHERE id = {safe_id}"  # OK
-
-user_name = request.GET['name']  # TAINTED
-query = f"SELECT * FROM users WHERE name = '{user_name}'"  # VULNERABLE!
-```
+**Why:** Dramatically reduces false positives
 
 **Implementation:**
-- Track taint sources: request.*, input(), sys.argv, os.environ
-- Track sanitizers: int(), validate_*(), escape_*()
-- Track sinks: execute(), system(), eval()
-- Report only if tainted data reaches sink unsanitized
+- Track 1-2 hops for common sanitizers
+- Simple single-file analysis
+- Common patterns: int(), str.isdigit(), validate_*()
 
-### 7. Dependency Scanning
-
-**Check for vulnerable dependencies:**
+#### 3. Dependency Vulnerability Scanning
 ```bash
-mikmbr scan --check-deps
+mikmbr scan . --check-deps
 ```
 
 **Features:**
 - Parse requirements.txt, Pipfile, pyproject.toml
-- Check against vulnerability databases (OSV, PyPI Advisory)
-- Report CVEs with severity and fix versions
-- Suggest dependency updates
+- Query OSV API (free, no auth needed)
+- Report known CVEs with fixes
+- Suggest version upgrades
 
-### 8. Multi-Language Support
+**Why:** Complete security picture (code + dependencies)
+
+### Medium Priority
+
+#### 4. Suppression Reporting
+```bash
+mikmbr scan . --show-suppressions
+```
+
+**Output:**
+```
+Active Findings (3):
+[HIGH] src/app.py:12 - SQL_INJECTION
+...
+
+Suppressed Findings (2):
+[HIGH] src/config.py:5 - HARDCODED_SECRET (reason: test key)
+[MED] src/legacy.py:105 - INSECURE_RANDOM (block disabled)
+```
+
+**Why:** Audit trail for suppressed findings
+
+#### 5. Code Context Lines
+```bash
+mikmbr scan . --context 3  # Show 3 lines before/after
+```
+
+**Output:**
+```
+[HIGH] src/app.py:12
+  10 | def process_input(data):
+  11 |     # Process user input
+> 12 |     result = eval(data)  # DANGEROUS!
+  13 |     return result
+  14 |
+```
+
+**Why:** Better UX without opening files
+
+#### 6. Auto-Fix Suggestions (Interactive)
+```bash
+mikmbr scan . --interactive
+```
+
+**Features:**
+- Show finding
+- Offer to apply fix automatically
+- Allow marking as false positive
+- Generate suppression comments
+
+**Why:** Saves developer time
+
+#### 7. Pre-commit Hook Template
+Create easy-to-use pre-commit integration:
+
+```yaml
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/tonybowen-me/Mikmbr
+    rev: v1.6.0
+    hooks:
+      - id: mikmbr
+```
+
+**Why:** Prevent vulnerabilities before commit
+
+### Long-term
+
+#### 8. Advanced Taint Tracking
+- Multi-hop data flow analysis
+- Cross-function tracking
+- Track through framework abstractions (Django ORM, etc.)
+
+**Why:** Industry-leading accuracy
+
+#### 9. Multi-Language Support
 
 **Phase 1: JavaScript/TypeScript**
 - eval(), Function constructor
@@ -178,57 +167,11 @@ mikmbr scan --check-deps
 - SQL injection in Node.js
 - Command injection in child_process
 
-**Phase 2: Go, Java, etc.**
+**Phase 2: Go, Java, Rust**
 
-## Advanced Features (v2.0+)
+**Why:** Expand addressable market
 
-### 9. Interactive Mode
-
-```bash
-mikmbr scan --interactive
-```
-
-**Features:**
-- Show finding
-- Offer to apply fix automatically
-- Allow user to mark as false positive
-- Generate suppression comments
-
-### 10. CI/CD Integration
-
-**GitHub Actions:**
-```yaml
-- name: Run mikmbr
-  uses: mikmbr/action@v1
-  with:
-    fail_on: high
-    format: sarif
-```
-
-**Exit Codes:**
-- 0: Clean
-- 1: Issues found below threshold
-- 2: Issues found above threshold (fail build)
-
-**SARIF Output:** For GitHub Code Scanning integration
-
-### 11. Fix Suggestions & Auto-Remediation
-
-```bash
-mikmbr scan --fix
-```
-
-**Auto-fix examples:**
-```python
-# Before
-result = eval(user_input)
-
-# After (with --fix)
-import ast
-result = ast.literal_eval(user_input)
-```
-
-### 12. IDE Integration
+#### 10. IDE Extensions
 
 **VS Code Extension:**
 - Real-time scanning as you type
@@ -237,83 +180,83 @@ result = ast.literal_eval(user_input)
 
 **PyCharm/IntelliJ Plugin**
 
-### 13. Web Dashboard
+**Why:** Catch issues earlier in dev cycle
 
-**Features:**
-- Historical trend analysis
-- Team/project comparisons
-- Rule effectiveness metrics
-- False positive management
-
-### 14. Custom Rules DSL
-
-**Allow users to define rules:**
+#### 11. GitHub Action
 ```yaml
+- name: Run mikmbr
+  uses: mikmbr/action@v1
+  with:
+    fail_on: high
+    format: sarif
+```
+
+**Why:** One-click setup for GitHub repos
+
+#### 12. Custom Rules DSL
+```yaml
+# Allow users to define custom rules
 rules:
   - id: CUSTOM_DANGEROUS_FUNC
-    pattern: |
-      dangerous_function($...ARGS)
+    pattern: dangerous_function($...ARGS)
     message: "Avoid dangerous_function"
     severity: HIGH
 ```
 
-### 15. Performance Optimizations
+**Why:** Extensibility for org-specific patterns
 
-**For large codebases:**
+#### 13. Performance Optimizations
 - Parallel file processing
 - Incremental scanning (only changed files)
 - Caching AST parsing results
 - Skip binary/generated files automatically
 
-### 16. Reporting & Metrics
+**Why:** Handle enterprise-scale codebases
 
-```bash
-mikmbr report --format html > report.html
-```
+#### 14. Web Dashboard
+- Historical trend analysis
+- Team/project comparisons
+- Rule effectiveness metrics
+- False positive management
+- Security posture scoring
 
-**Include:**
-- Executive summary
-- Breakdown by severity
-- Breakdown by rule type
-- Trend over time
-- Compliance mapping (OWASP Top 10, CWE Top 25)
-
-## Implementation Priority
-
-### Quick Wins (1-2 days each):
-1. ✅ Add `--verbose` flag with code snippets
-2. ✅ Add CWE/OWASP mappings to findings
-3. ✅ Add confidence levels
-4. ✅ Implement 5 new rules (INSECURE_DESERIALIZATION, PATH_TRAVERSAL, etc.)
-5. ✅ Configuration file support
-
-### Medium Effort (1 week each):
-6. Enhanced secret detection with entropy
-7. Basic dependency scanning
-8. SARIF output format
-9. Auto-fix for simple cases
-10. Taint tracking (basic)
-
-### Large Projects (2-4 weeks each):
-11. Advanced taint analysis
-12. Multi-language support
-13. IDE extensions
-14. Web dashboard
-
-## Community & Ecosystem
-
-- **Plugin system** for custom rules
-- **Rule marketplace** for sharing detection rules
-- **Integration with security tools** (Snyk, Dependabot, etc.)
-- **Training mode** to help developers learn secure coding
+**Why:** SaaS revenue, enterprise features
 
 ---
 
-## Getting Started with Expansion
+## Feature Prioritization
 
-Pick one area and let's implement it! Recommended starting points:
+### Next 3 Features to Build:
+1. **Exit code configuration** - Quick win, high CI/CD value
+2. **Dependency scanning** - High impact, differentiator
+3. **Basic taint tracking** - Reduces false positives significantly
 
-1. **More verbose output** - Quick win, immediate value
-2. **5 new detection rules** - Expands coverage significantly
-3. **Configuration file** - Enables customization
-4. **Dependency scanning** - High value for security teams
+### Not Building Yet:
+- CI/CD (user doesn't want yet)
+- Web dashboard (too early)
+- Multi-language (focus on Python first)
+
+---
+
+## Community Requests
+
+Track user requests here as they come in:
+- (None yet - pre-release)
+
+---
+
+## Technical Debt
+
+### Current Limitations to Address:
+1. No data-flow analysis (can't track validated inputs)
+2. Framework detection is pattern-based (not semantic)
+3. No tests for v1.6 features yet
+4. No benchmark data documented
+5. Documentation still has some inconsistencies
+
+### Breaking Changes to Consider:
+- (None planned for v2.0 yet)
+
+---
+
+**Updated:** 2026-01-14 (v1.6.0)

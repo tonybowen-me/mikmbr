@@ -5,6 +5,80 @@ All notable changes to mikmbr will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-01-14
+
+### Added
+- **Exit Code Configuration**:
+  - `--fail-on` flag to control build failures based on severity
+  - Options: `critical`, `high`, `medium`, `low`
+  - Allows gradual adoption in legacy codebases
+  - Essential for CI/CD pipeline control
+  - Added `CRITICAL` severity level to models
+  - Documentation (EXIT_CODES.md)
+
+- **Code Context Lines**:
+  - `--context N` flag to show surrounding code
+  - Shows N lines before and after each finding
+  - Line numbers and `>` marker for vulnerable line
+  - Improves code understanding without opening files
+  - Documentation (CONTEXT_LINES.md)
+
+### Changed
+- CLI now accepts `--fail-on` and `--context` arguments
+- Formatter base class supports context line extraction
+- HumanFormatter shows context when `--context` is specified
+- Exit logic now respects severity thresholds
+
+### Statistics
+- Exit codes: 4 configurable thresholds (critical/high/medium/low)
+- Severity levels: 4 (CRITICAL, HIGH, MEDIUM, LOW)
+
+## [1.6.0] - 2026-01-14
+
+### Added
+- **Inline Suppression System**:
+  - Line-level suppression: `# mikmbr: ignore`
+  - Rule-specific suppression: `# mikmbr: ignore[RULE_ID]`
+  - Multiple rule suppression: `# mikmbr: ignore[RULE1, RULE2]`
+  - Block suppression: `# mikmbr: disable` / `# mikmbr: enable`
+  - Case-insensitive matching
+  - Support for previous-line suppression
+  - Suppression parser (`src/mikmbr/utils/suppression.py`)
+  - Documentation (SUPPRESSION.md)
+  - Comprehensive test suite
+
+- **Framework-Specific Security Rules** (17 new checks):
+  - **Django (6 rules)**: Raw SQL, mark_safe(), QuerySet.extra(), DEBUG=True, ALLOWED_HOSTS, SECRET_KEY
+  - **Flask (6 rules)**: send_file(), render_template_string(), secret_key, debug mode, cookies, CORS
+  - **FastAPI (5 rules)**: Unvalidated input, FileResponse, HTMLResponse, CORS, missing auth
+  - Rules: `django_security.py`, `flask_security.py`, `fastapi_security.py`
+  - Example file: `examples/framework_vulnerabilities.py`
+  - Documentation (FRAMEWORK_RULES.md)
+
+- **SARIF Output Format**:
+  - Full SARIF 2.1.0 specification compliance
+  - GitHub Code Scanning integration
+  - CLI flag: `--format sarif`
+  - CWE and OWASP tagging
+  - Severity level mapping (HIGH→error, MEDIUM→warning, LOW→note)
+  - Optional code snippets with `--verbose`
+  - SARIF formatter (`src/mikmbr/formatters/sarif.py`)
+  - Documentation (SARIF_FORMAT.md)
+  - GitHub Actions workflow examples
+
+### Changed
+- Scanner now parses and respects suppression comments
+- CLI updated with SARIF format option
+- Formatters module integrated SARIF support
+- README updated to reflect 25+ rules
+- Website updated with v1.6 features and correct rule counts
+
+### Statistics
+- Total rules: 25+ (21 core + 17 framework-specific with some overlap)
+- Output formats: 3 (human, json, sarif)
+- OWASP coverage: 9/10 categories
+- Framework support: Django, Flask, FastAPI
+
 ## [1.5.0] - 2025-01-13
 
 ### Added

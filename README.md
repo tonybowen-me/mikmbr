@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-**Fast, deterministic security scanner for Python.** Detects 17 types of vulnerabilities including SQL injection, secrets, SSRF. OWASP Top 10 coverage.
+**Fast, deterministic security scanner for Python.** Detects 25+ types of vulnerabilities including SQL injection, secrets, SSRF. Framework-specific rules for Django, Flask, FastAPI.
 
 ```bash
 pip install mikmbr
@@ -13,7 +13,9 @@ mikmbr scan .
 ## Why Mikmbr?
 
 - **⚡ Lightning Fast**: Scans 1000+ files per second using Python AST analysis
-- **🎯 Zero False Positives**: Deterministic, rule-based detection - no AI guessing
+- **🎯 Framework-Aware**: Specialized rules for Django, Flask, and FastAPI applications
+- **🔕 Suppression System**: Mark false positives with inline comments
+- **🔗 GitHub Integration**: SARIF output for native Code Scanning support
 - **🔒 Privacy First**: Runs entirely offline. Your code never leaves your machine
 - **📚 Educational**: Every finding includes CWE/OWASP references and fix suggestions
 - **🎛️ Fully Configurable**: YAML-based configuration for custom rules and severity levels
@@ -21,7 +23,9 @@ mikmbr scan .
 
 ## Features
 
-**17 Detection Rules** covering **9/10 OWASP Top 10 2021** categories:
+### Core Security Rules (21 rules)
+
+**21 Detection Rules** covering **9/10 OWASP Top 10 2021** categories:
 
 | Rule | Severity | Description | CWE |
 |------|----------|-------------|-----|
@@ -42,6 +46,47 @@ mikmbr scan .
 | Regex DoS | MEDIUM | Catastrophic backtracking patterns | CWE-1333 |
 | Bare Except | LOW | Catches all exceptions | CWE-396 |
 | Debug Code | LOW | Debug mode in production | CWE-489 |
+
+### Framework-Specific Rules (17 additional checks)
+
+**Django (6 rules)**
+- `Model.objects.raw()` without parameterization → SQL injection
+- `mark_safe()` usage → XSS risk
+- `QuerySet.extra()` → SQL injection
+- `DEBUG = True` → Information disclosure
+- Empty/wildcard `ALLOWED_HOSTS` → Host header attacks
+- Hardcoded `SECRET_KEY` → Session compromise
+
+**Flask (6 rules)**
+- `send_file()` with user input → Path traversal
+- `render_template_string()` → Server-Side Template Injection
+- Hardcoded `app.secret_key` → Session compromise
+- `app.debug = True` → Information disclosure
+- `set_cookie()` without secure flags → Cookie theft
+- Wildcard CORS → CSRF attacks
+
+**FastAPI (5 rules)**
+- `dict`/`Any` parameters → Input validation bypass
+- `FileResponse` with user path → Path traversal
+- `HTMLResponse` with user content → XSS
+- Wildcard CORS → CSRF attacks
+- Missing authentication on endpoints → Unauthorized access
+
+See [FRAMEWORK_RULES.md](FRAMEWORK_RULES.md) for complete documentation.
+
+### New in v1.6
+
+**Inline Suppression**
+```python
+api_key = "test_key"  # mikmbr: ignore[HARDCODED_SECRET]
+```
+
+**SARIF Output for GitHub Code Scanning**
+```bash
+mikmbr scan . --format sarif > results.sarif
+```
+
+See [SUPPRESSION.md](SUPPRESSION.md) and [SARIF_FORMAT.md](SARIF_FORMAT.md) for details.
 
 ## Quick Start
 

@@ -54,6 +54,18 @@ def main():
         metavar="SEVERITY",
         help="Exit with code 1 only if findings at this severity or higher are found"
     )
+    scan_parser.add_argument(
+        "--check-deps",
+        action="store_true",
+        default=False,
+        help="Check dependencies (requirements.txt, pyproject.toml) for known vulnerabilities"
+    )
+    scan_parser.add_argument(
+        "--deps-only",
+        action="store_true",
+        default=False,
+        help="Only scan dependencies, skip code analysis (implies --check-deps)"
+    )
 
     args = parser.parse_args()
 
@@ -82,9 +94,18 @@ def main():
             if args.verbose is not None and args.verbose:
                 config.output.verbose = args.verbose
 
-            # Create scanner with configuration
-            scanner = Scanner(config=config)
-            findings = scanner.scan_path(args.path)
+            # Perform code scanning (unless --deps-only)
+            findings = []
+            if not args.deps_only:
+                scanner = Scanner(config=config)
+                findings = scanner.scan_path(args.path)
+
+            # Perform dependency scanning if requested
+            if args.check_deps or args.deps_only:
+                from .dependencies import DependencyScanner
+                dep_scanner = DependencyScanner()
+                dep_findings = dep_scanner.scan_directory(Path(args.path))
+                findings.extend(dep_findings)
 
             # Use configuration for formatter
             formatter = get_formatter(config.output.format, verbose=config.output.verbose)

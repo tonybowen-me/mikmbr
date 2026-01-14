@@ -169,7 +169,8 @@
             <div class="logo">Mikmbr</div>
             <div class="nav-links">
                 <a href="index.html">Home</a>
-                <a href="docs.html" style="color: #2563eb;">Documentation</a>
+                <a href="showcase.html">Showcase</a>
+                <a href="docs.html" style="color: #2563eb;">Docs</a>
                 <a href="https://github.com/tonybowen-me/Mikmbr" target="_blank">GitHub</a>
             </div>
         </nav>
@@ -252,9 +253,21 @@ mikmbr scan . --format sarif</code></div>
 
         <!-- Features -->
         <section id="features" class="docs-section">
-            <h2>✨ Features (v1.7)</h2>
+            <h2>✨ Features (v1.8)</h2>
 
             <div class="feature-list">
+                <div class="feature-item">
+                    <h4>📦 Dependency Scanning (NEW)</h4>
+                    <p>Detect vulnerabilities in third-party packages with <code>--check-deps</code></p>
+                    <div class="code-block"><code>mikmbr scan . --check-deps</code></div>
+                </div>
+
+                <div class="feature-item">
+                    <h4>🎯 Dependencies-Only Mode (NEW)</h4>
+                    <p>Skip code analysis and scan only dependencies</p>
+                    <div class="code-block"><code>mikmbr scan . --deps-only</code></div>
+                </div>
+
                 <div class="feature-item">
                     <h4>🚦 Exit Code Control</h4>
                     <p>Control when CI/CD builds fail with <code>--fail-on</code></p>
@@ -279,6 +292,33 @@ query = build_query()</code></div>
                     <p>Django, Flask, FastAPI specific checks</p>
                 </div>
             </div>
+
+            <h3>Dependency Scanning</h3>
+            <p>Scan your project dependencies for known vulnerabilities using the OSV (Open Source Vulnerabilities) database:</p>
+
+            <div class="code-block"><code># Scan code + dependencies
+mikmbr scan . --check-deps
+
+# Scan only dependencies (fast)
+mikmbr scan . --deps-only
+
+# Combine with other flags
+mikmbr scan . --check-deps --fail-on high --format json</code></div>
+
+            <p><strong>Supported dependency files:</strong></p>
+            <ul>
+                <li><code>requirements.txt</code> - Standard pip format</li>
+                <li><code>pyproject.toml</code> - PEP 621 and Poetry format</li>
+            </ul>
+
+            <p><strong>Example output:</strong></p>
+            <div class="code-block"><code>[<span class="severity-high">HIGH</span>] requirements.txt:3
+  Rule: VULN_DEPENDENCY
+  CWE: CWE-89
+  Package django version 2.2.0 has known vulnerability CVE-2023-12345: SQL injection in admin panel
+  Remediation: Upgrade django to >= 2.2.28
+  References:
+    - https://osv.dev/vulnerability/PYSEC-2023-12345</code></div>
 
             <h3>Exit Code Configuration</h3>
             <p>Control when builds fail based on severity:</p>
@@ -348,7 +388,11 @@ jobs:
         run: pip install mikmbr
 
       - name: Run Security Scan
-        run: mikmbr scan . --fail-on high --format json</code></div>
+        run: mikmbr scan . --check-deps --fail-on high --format json</code></div>
+
+            <h4>With Dependency Scanning Only (Fast)</h4>
+            <div class="code-block"><code>      - name: Check Dependencies
+        run: mikmbr scan . --deps-only --fail-on high</code></div>
 
             <h3>GitHub Code Scanning (SARIF)</h3>
             <div class="code-block"><code>- name: Security Scan

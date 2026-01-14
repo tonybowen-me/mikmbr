@@ -1,0 +1,443 @@
+{
+  "findings": [
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 47,
+      "rule_id": "DANGEROUS_EXEC",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Use of eval() allows arbitrary code execution",
+      "remediation": "Avoid eval(). Use safer alternatives like ast.literal_eval() for data or refactor to eliminate dynamic code execution.",
+      "cwe_id": "CWE-95",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     result = eval(user_code)  # VULNERABLE: Arbitrary code execution",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/95.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://docs.python.org/3/library/ast.html#ast.literal_eval"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 54,
+      "rule_id": "DANGEROUS_EXEC",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Use of exec() allows arbitrary code execution",
+      "remediation": "Avoid exec(). Use safer alternatives like ast.literal_eval() for data or refactor to eliminate dynamic code execution.",
+      "cwe_id": "CWE-95",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     exec(user_script)  # VULNERABLE: Arbitrary code execution",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/95.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://docs.python.org/3/library/ast.html#ast.literal_eval"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 60,
+      "rule_id": "COMMAND_INJECTION",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "os.system() is vulnerable to command injection",
+      "remediation": "Use subprocess.run() with a list of arguments instead of shell commands. Never pass untrusted input to os.system().",
+      "cwe_id": "CWE-78",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     os.system(f\"cat {filename}\")  # VULNERABLE: Command injection",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/78.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://docs.python.org/3/library/subprocess.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 66,
+      "rule_id": "COMMAND_INJECTION",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "subprocess call with shell=True is vulnerable to command injection",
+      "remediation": "Use shell=False (default) and pass command as a list: subprocess.run(['cmd', 'arg1', 'arg2'])",
+      "cwe_id": "CWE-78",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     subprocess.run(f\"ls {user_input}\", shell=True)  # VULNERABLE: Command injection",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/78.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://docs.python.org/3/library/subprocess.html#security-considerations"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 274,
+      "rule_id": "SQL_INJECTION",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "message": "Possible SQL injection: SQL query built with string concatenation/formatting",
+      "remediation": "Use parameterized queries with placeholders: cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))",
+      "cwe_id": "CWE-89",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     cursor.execute(f\"SELECT * FROM users WHERE id = {user_id}\")  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/89.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 92,
+      "rule_id": "WEAK_CRYPTO",
+      "severity": "MED",
+      "confidence": "HIGH",
+      "message": "Use of weak cryptographic algorithm: MD5",
+      "remediation": "Replace MD5 with SHA-256 or stronger: hashlib.sha256() or hashlib.sha512()",
+      "cwe_id": "CWE-327",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     hashed = hashlib.md5(password.encode()).hexdigest()  # VULNERABLE: MD5 is broken",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/327.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/hashlib.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 99,
+      "rule_id": "WEAK_CRYPTO",
+      "severity": "MED",
+      "confidence": "HIGH",
+      "message": "Use of weak cryptographic algorithm: SHA1",
+      "remediation": "Replace SHA1 with SHA-256 or stronger: hashlib.sha256() or hashlib.sha512()",
+      "cwe_id": "CWE-327",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     signature = hashlib.sha1(data).hexdigest()  # VULNERABLE: SHA1 is weak",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/327.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/hashlib.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 155,
+      "rule_id": "WEAK_CRYPTO",
+      "severity": "MED",
+      "confidence": "HIGH",
+      "message": "Use of weak cryptographic algorithm: MD5",
+      "remediation": "Replace MD5 with SHA-256 or stronger: hashlib.sha256() or hashlib.sha512()",
+      "cwe_id": "CWE-327",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     hashed_password = hashlib.md5(password.encode()).hexdigest()  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/327.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/hashlib.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 119,
+      "rule_id": "HARDCODED_SECRET",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Hardcoded Stripe API Key detected in 'API_KEY'",
+      "remediation": "Store Stripe API Key in environment variables or a secrets manager. Never commit secrets to version control.",
+      "cwe_id": "CWE-798",
+      "owasp_category": "A07:2021 - Identification and Authentication Failures",
+      "code_snippet": ">>>     API_KEY = \"sk_live_51HqT2KLm9N8pQr3X4vY5zW6aB7cD8eF9gH0iJ1kL2mN3oP4qR5sT6uV7wX8yZ9\"  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html",
+        "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 288,
+      "rule_id": "HARDCODED_SECRET",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "message": "Potential hardcoded secret in variable 'SECRET_KEY'",
+      "remediation": "Store secrets in environment variables or a secrets manager. Use os.getenv() or a library like python-dotenv.",
+      "cwe_id": "CWE-798",
+      "owasp_category": "A07:2021 - Identification and Authentication Failures",
+      "code_snippet": ">>>     SECRET_KEY = 'django-insecure-key'",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html",
+        "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 293,
+      "rule_id": "HARDCODED_SECRET",
+      "severity": "MED",
+      "confidence": "MEDIUM",
+      "message": "High-entropy string in 'SECRET_KEY' may be a secret (entropy-based detection)",
+      "remediation": "If this is a secret, store it in environment variables. If it's not a secret, consider using a more descriptive variable name or add to exclusion list.",
+      "cwe_id": "CWE-798",
+      "owasp_category": "A07:2021 - Identification and Authentication Failures",
+      "code_snippet": ">>>     SECRET_KEY = 'django-insecure-^w#$m3lk4j5h6g7f8d9s0a1q2w3e4r5t6y7u8i9o0p'  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/798.html",
+        "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 106,
+      "rule_id": "INSECURE_DESERIALIZATION",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Insecure deserialization with pickle.loads/load allows arbitrary code execution",
+      "remediation": "Never unpickle data from untrusted sources. Use JSON or other safe serialization formats. If pickle is required, validate data source and use HMAC signatures.",
+      "cwe_id": "CWE-502",
+      "owasp_category": "A08:2021 - Software and Data Integrity Failures",
+      "code_snippet": ">>>     obj = pickle.loads(user_data)  # VULNERABLE: Arbitrary code execution",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/502.html",
+        "https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/",
+        "https://docs.python.org/3/library/pickle.html#pickle-restrict"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 113,
+      "rule_id": "PATH_TRAVERSAL",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "message": "Potential path traversal: file path constructed with string concatenation",
+      "remediation": "Use os.path.join() with proper validation, or use pathlib.Path. Validate that the final path is within the expected directory using os.path.commonprefix() or Path.resolve().",
+      "cwe_id": "CWE-22",
+      "owasp_category": "A01:2021 - Broken Access Control",
+      "code_snippet": ">>>     with open(f\"/var/www/uploads/{filename}\", 'r') as f:  # VULNERABLE: Path traversal",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/22.html",
+        "https://owasp.org/Top10/A01_2021-Broken_Access_Control/",
+        "https://owasp.org/www-community/attacks/Path_Traversal"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 179,
+      "rule_id": "INSECURE_RANDOM",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Insecure random number generation for security purposes",
+      "remediation": "Use the 'secrets' module instead of 'random' for security-sensitive operations: secrets.token_bytes(), secrets.token_hex(), secrets.choice(), etc.",
+      "cwe_id": "CWE-338",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     password = ''.join(random.choice(string.ascii_letters) for _ in range(16))  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/338.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/secrets.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 172,
+      "rule_id": "INSECURE_RANDOM",
+      "severity": "HIGH",
+      "confidence": "HIGH",
+      "message": "Insecure random number generation for security purposes",
+      "remediation": "Use the 'secrets' module instead of 'random' for security-sensitive operations: secrets.token_bytes(), secrets.token_hex(), secrets.choice(), etc.",
+      "cwe_id": "CWE-338",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     token = ''.join([str(random.randint(0, 9)) for _ in range(32)])  # VULNERABLE",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/338.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/secrets.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 195,
+      "rule_id": "XXE",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "message": "XML parsing without defusedxml may be vulnerable to XXE attacks",
+      "remediation": "Use defusedxml.ElementTree instead of xml.etree.ElementTree, or use lxml with proper security settings. Install with: pip install defusedxml",
+      "cwe_id": "CWE-611",
+      "owasp_category": "A05:2021 - Security Misconfiguration",
+      "code_snippet": ">>>     tree = ET.parse(xml_data)  # VULNERABLE: XXE if not configured properly",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/611.html",
+        "https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing",
+        "https://pypi.org/project/defusedxml/"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 134,
+      "rule_id": "SSRF",
+      "severity": "HIGH",
+      "confidence": "MEDIUM",
+      "message": "Potential SSRF: requests.get() with dynamic URL",
+      "remediation": "Validate and sanitize URLs. Use allowlist of permitted domains. Example: if urlparse(url).netloc in ALLOWED_HOSTS: ...",
+      "cwe_id": "CWE-918",
+      "owasp_category": "A10:2021 - Server-Side Request Forgery (SSRF)",
+      "code_snippet": ">>>     response = requests.get(url)  # VULNERABLE: SSRF",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/918.html",
+        "https://owasp.org/Top10/A10_2021-Server-Side_Request_Forgery_%28SSRF%29/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 149,
+      "rule_id": "OPEN_REDIRECT",
+      "severity": "MED",
+      "confidence": "MEDIUM",
+      "message": "Potential open redirect: redirect() with unsanitized URL",
+      "remediation": "Validate redirect URLs against an allowlist or use relative URLs only. Example: if url.startswith('/'): redirect(url)",
+      "cwe_id": "CWE-601",
+      "owasp_category": "A01:2021 - Broken Access Control",
+      "code_snippet": ">>>     return redirect(next_url)  # VULNERABLE: Open redirect",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/601.html",
+        "https://owasp.org/Top10/A01_2021-Broken_Access_Control/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Unvalidated_Redirects_and_Forwards_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 202,
+      "rule_id": "LOG_INJECTION",
+      "severity": "MED",
+      "confidence": "MEDIUM",
+      "message": "Potential log injection: info() with unsanitized user input",
+      "remediation": "Sanitize user input before logging. Remove newlines and control characters. Use structured logging with separate fields for user data.",
+      "cwe_id": "CWE-117",
+      "owasp_category": "A09:2021 - Security Logging and Monitoring Failures",
+      "code_snippet": ">>>     logging.info(f\"User logged in: {username}\")  # VULNERABLE: Log injection",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/117.html",
+        "https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/",
+        "https://cheatsheetseries.owasp.org/cheatsheets/Logging_Cheat_Sheet.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 254,
+      "rule_id": "LOG_INJECTION",
+      "severity": "LOW",
+      "confidence": "LOW",
+      "message": "Potential log injection: print() with unsanitized input (if output is logged)",
+      "remediation": "Use proper logging library instead of print(). Sanitize user input.",
+      "cwe_id": "CWE-117",
+      "owasp_category": "A09:2021 - Security Logging and Monitoring Failures",
+      "code_snippet": ">>>     print(f\"DEBUG: User data = {user_data}\")  # VULNERABLE: Debug code in production",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/117.html",
+        "https://owasp.org/Top10/A09_2021-Security_Logging_and_Monitoring_Failures/"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 28,
+      "rule_id": "TEMPLATE_INJECTION",
+      "severity": "CRITICAL",
+      "confidence": "MEDIUM",
+      "message": "Potential SSTI: Template() with dynamic/user-controlled template string",
+      "remediation": "Never pass user input directly to Template(). Use predefined templates and render with safe context.",
+      "cwe_id": "CWE-94",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     template = Template(user_input)  # VULNERABLE: SSTI",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/94.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://portswigger.net/web-security/server-side-template-injection"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 36,
+      "rule_id": "TEMPLATE_INJECTION",
+      "severity": "CRITICAL",
+      "confidence": "MEDIUM",
+      "message": "Potential SSTI: Template() with dynamic/user-controlled template string",
+      "remediation": "Never pass user input directly to Template(). Use predefined templates and render with safe context.",
+      "cwe_id": "CWE-94",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     t = Template(user_template)  # VULNERABLE: SSTI",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/94.html",
+        "https://owasp.org/Top10/A03_2021-Injection/",
+        "https://portswigger.net/web-security/server-side-template-injection"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 317,
+      "rule_id": "TEMPLATE_INJECTION",
+      "severity": "CRITICAL",
+      "confidence": "HIGH",
+      "message": "Potential SSTI: render_template_string() with dynamic template",
+      "remediation": "Use render_template() with file-based templates instead. Never pass user input to render_template_string().",
+      "cwe_id": "CWE-94",
+      "owasp_category": "A03:2021 - Injection",
+      "code_snippet": ">>>     return render_template_string(template)  # VULNERABLE: SSTI",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/94.html",
+        "https://owasp.org/Top10/A03_2021-Injection/"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 210,
+      "rule_id": "TIMING_ATTACK",
+      "severity": "MED",
+      "confidence": "MEDIUM",
+      "message": "Potential timing attack: Using == or != for security-sensitive comparison",
+      "remediation": "Use secrets.compare_digest() for constant-time comparison: if secrets.compare_digest(password, stored_password): ...",
+      "cwe_id": "CWE-208",
+      "owasp_category": "A02:2021 - Cryptographic Failures",
+      "code_snippet": ">>>     if user_token == correct_token:  # VULNERABLE: Timing attack",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/208.html",
+        "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+        "https://docs.python.org/3/library/secrets.html#secrets.compare_digest"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 247,
+      "rule_id": "BARE_EXCEPT",
+      "severity": "LOW",
+      "confidence": "HIGH",
+      "message": "Bare except clause catches all exceptions including system exits",
+      "remediation": "Specify exception types: except ValueError: or except (TypeError, ValueError): or use except Exception: to avoid catching system exits.",
+      "cwe_id": "CWE-705",
+      "owasp_category": "A04:2021 - Insecure Design",
+      "code_snippet": ">>>     except:  # VULNERABLE: Bare except",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/705.html",
+        "https://docs.python.org/3/tutorial/errors.html#handling-exceptions",
+        "https://pylint.pycqa.org/en/latest/user_guide/messages/warning/bare-except.html"
+      ]
+    },
+    {
+      "file": "examples\\showcase_examples.py",
+      "line": 261,
+      "rule_id": "DEBUG_CODE",
+      "severity": "MED",
+      "confidence": "HIGH",
+      "message": "Breakpoint found: Should be removed before production deployment",
+      "remediation": "Remove breakpoint() calls before deploying to production.",
+      "cwe_id": "CWE-489",
+      "owasp_category": "A05:2021 - Security Misconfiguration",
+      "code_snippet": ">>>     breakpoint()  # VULNERABLE: Debug code in production",
+      "references": [
+        "https://cwe.mitre.org/data/definitions/489.html"
+      ]
+    }
+  ],
+  "total": 26
+}

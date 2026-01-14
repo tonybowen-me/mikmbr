@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rule Showcase - Mikmbr Security Scanner</title>
+    <meta name="description" content="See Mikmbr in action! Real vulnerable code examples and actual detection output for all 25+ security rules.">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .showcase-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .showcase-hero {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .showcase-hero h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .showcase-hero p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .severity-filter {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #4CAF50;
+        }
+
+        .filter-btn.active {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .filter-btn.critical { border-color: #d32f2f; }
+        .filter-btn.critical.active { background: #d32f2f; }
+
+        .filter-btn.high { border-color: #f57c00; }
+        .filter-btn.high.active { background: #f57c00; }
+
+        .filter-btn.medium { border-color: #fbc02d; color: #333; }
+        .filter-btn.medium.active { background: #fbc02d; }
+
+        .filter-btn.low { border-color: #0288d1; }
+        .filter-btn.low.active { background: #0288d1; }
+
+        .rule-showcase {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .rule-header {
+            background: #f5f5f5;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .rule-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .rule-title h3 {
+            margin: 0;
+            font-size: 1.4em;
+        }
+
+        .rule-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .rule-body {
+            padding: 0;
+        }
+
+        .code-section {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .code-section:last-child {
+            border-bottom: none;
+        }
+
+        .code-section-header {
+            padding: 15px 20px;
+            background: #fafafa;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .code-section-header.vulnerable {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .code-section-header.detection {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .code-section-header.fixed {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .code-section-content {
+            padding: 0;
+        }
+
+        pre {
+            margin: 0;
+            padding: 20px;
+            background: #263238;
+            color: #aed581;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .detection-output {
+            background: #f5f5f5;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .severity-critical { color: #d32f2f; font-weight: bold; }
+        .severity-high { color: #f57c00; font-weight: bold; }
+        .severity-medium { color: #fbc02d; font-weight: bold; }
+        .severity-low { color: #0288d1; font-weight: bold; }
+
+        .explanation {
+            padding: 20px;
+            background: #fffde7;
+            border-left: 4px solid #fbc02d;
+            margin: 20px;
+        }
+
+        .explanation h4 {
+            margin-top: 0;
+            color: #f57f17;
+        }
+
+        /* Syntax highlighting */
+        .keyword { color: #c792ea; }
+        .string { color: #c3e88d; }
+        .comment { color: #546e7a; font-style: italic; }
+        .function { color: #82aaff; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Mikmbr</div>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="docs.html">Docs</a>
+                <a href="showcase.html" class="active">Showcase</a>
+                <a href="https://github.com/tonybowen-me/Mikmbr" target="_blank">GitHub</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="showcase-container">
+        <div class="showcase-hero">
+            <h1>See Mikmbr In Action</h1>
+            <p>Real vulnerable code examples with actual detection output. Every example below has been tested and verified to work.</p>
+        </div>
+
+        <!-- Severity Filter -->
+        <div class="severity-filter">
+            <button class="filter-btn all active" onclick="filterBySeverity('all')">All Rules</button>
+            <button class="filter-btn critical" onclick="filterBySeverity('critical')">CRITICAL</button>
+            <button class="filter-btn high" onclick="filterBySeverity('high')">HIGH</button>
+            <button class="filter-btn medium" onclick="filterBySeverity('medium')">MEDIUM</button>
+            <button class="filter-btn low" onclick="filterBySeverity('low')">LOW</button>
+        </div>
+
+        <!-- CRITICAL SEVERITY -->
+        <div class="rule-showcase" data-severity="critical">
+            <div class="rule-header">
+                <div class="rule-title">
+                    <span class="severity-badge severity-critical">CRITICAL</span>
+                    <h3>Server-Side Template Injection (SSTI)</h3>
+                </div>
+                <div class="rule-meta">
+                    <span>Rule: <code>TEMPLATE_INJECTION</code></span>
+                    <span>CWE-94</span>
+                    <span>OWASP: A03:2021 - Injection</span>
+                </div>
+            </div>
+            <div class="rule-body">
+                <div class="code-section">
+                    <div class="code-section-header vulnerable">❌ Vulnerable Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">from</span> jinja2 <span class="keyword">import</span> Template
+<span class="keyword">from</span> flask <span class="keyword">import</span> request
+
+<span class="keyword">def</span> <span class="function">render_page</span>():
+    user_input = request.args.<span class="function">get</span>(<span class="string">'template'</span>)
+    template = <span class="function">Template</span>(user_input)  <span class="comment"># VULNERABLE!</span>
+    <span class="keyword">return</span> template.<span class="function">render</span>()</code></pre>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header detection">🔍 Mikmbr Detection</div>
+                    <div class="detection-output">[<span class="severity-critical">CRITICAL</span>] app.py:6
+  Rule: TEMPLATE_INJECTION
+  CWE: CWE-94
+  OWASP: A03:2021 - Injection
+
+  Potential SSTI: Template() with dynamic/user-controlled template string
+
+  Remediation: Never pass user input directly to Template(). Use predefined
+  templates and render with safe context.</div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header fixed">✅ Fixed Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">from</span> flask <span class="keyword">import</span> request, render_template
+
+<span class="keyword">def</span> <span class="function">render_page</span>():
+    user_name = request.args.<span class="function">get</span>(<span class="string">'name'</span>)
+    <span class="comment"># Use predefined template file</span>
+    <span class="keyword">return</span> <span class="function">render_template</span>(<span class="string">'page.html'</span>, name=user_name)</code></pre>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <h4>Why This Is Critical</h4>
+                    <p>Server-Side Template Injection allows attackers to execute arbitrary code on your server. An attacker could send a malicious template like <code>{{config.__class__.__init__.__globals__['os'].popen('ls').read()}}</code> to run system commands.</p>
+                    <p><strong>Real-world impact:</strong> Complete server takeover, data theft, ransomware deployment.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HIGH SEVERITY: SQL Injection -->
+        <div class="rule-showcase" data-severity="high">
+            <div class="rule-header">
+                <div class="rule-title">
+                    <span class="severity-badge severity-high">HIGH</span>
+                    <h3>SQL Injection</h3>
+                </div>
+                <div class="rule-meta">
+                    <span>Rule: <code>SQL_INJECTION</code></span>
+                    <span>CWE-89</span>
+                    <span>OWASP: A03:2021 - Injection</span>
+                </div>
+            </div>
+            <div class="rule-body">
+                <div class="code-section">
+                    <div class="code-section-header vulnerable">❌ Vulnerable Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">import</span> sqlite3
+<span class="keyword">from</span> flask <span class="keyword">import</span> request
+
+<span class="keyword">def</span> <span class="function">get_user</span>():
+    user_id = request.args.<span class="function">get</span>(<span class="string">'id'</span>)
+    conn = sqlite3.<span class="function">connect</span>(<span class="string">'db.sqlite'</span>)
+    cursor = conn.<span class="function">cursor</span>()
+    query = <span class="string">f"SELECT * FROM users WHERE id = {user_id}"</span>
+    cursor.<span class="function">execute</span>(query)  <span class="comment"># VULNERABLE!</span>
+    <span class="keyword">return</span> cursor.<span class="function">fetchone</span>()</code></pre>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header detection">🔍 Mikmbr Detection</div>
+                    <div class="detection-output">[<span class="severity-high">HIGH</span>] app.py:8
+  Rule: SQL_INJECTION
+  CWE: CWE-89
+  OWASP: A03:2021 - Injection
+
+  Possible SQL injection: SQL query built with string concatenation/formatting
+
+  Remediation: Use parameterized queries with placeholders:
+  cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))</div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header fixed">✅ Fixed Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">def</span> <span class="function">get_user</span>():
+    user_id = request.args.<span class="function">get</span>(<span class="string">'id'</span>)
+    conn = sqlite3.<span class="function">connect</span>(<span class="string">'db.sqlite'</span>)
+    cursor = conn.<span class="function">cursor</span>()
+    <span class="comment"># Use parameterized query</span>
+    cursor.<span class="function">execute</span>(<span class="string">"SELECT * FROM users WHERE id = ?"</span>, (user_id,))
+    <span class="keyword">return</span> cursor.<span class="function">fetchone</span>()</code></pre>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <h4>Why This Is Dangerous</h4>
+                    <p>SQL injection allows attackers to manipulate database queries. With input like <code>1 OR 1=1</code>, attackers can bypass authentication or extract entire databases.</p>
+                    <p><strong>Real-world impact:</strong> Data breaches, authentication bypass, data deletion.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HIGH SEVERITY: Command Injection -->
+        <div class="rule-showcase" data-severity="high">
+            <div class="rule-header">
+                <div class="rule-title">
+                    <span class="severity-badge severity-high">HIGH</span>
+                    <h3>Command Injection</h3>
+                </div>
+                <div class="rule-meta">
+                    <span>Rule: <code>COMMAND_INJECTION</code></span>
+                    <span>CWE-78</span>
+                    <span>OWASP: A03:2021 - Injection</span>
+                </div>
+            </div>
+            <div class="rule-body">
+                <div class="code-section">
+                    <div class="code-section-header vulnerable">❌ Vulnerable Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">import</span> subprocess
+<span class="keyword">from</span> flask <span class="keyword">import</span> request
+
+<span class="keyword">def</span> <span class="function">list_files</span>():
+    directory = request.args.<span class="function">get</span>(<span class="string">'dir'</span>)
+    <span class="comment"># shell=True makes this vulnerable!</span>
+    result = subprocess.<span class="function">run</span>(<span class="string">f"ls {directory}"</span>, shell=<span class="keyword">True</span>)
+    <span class="keyword">return</span> result</code></pre>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header detection">🔍 Mikmbr Detection</div>
+                    <div class="detection-output">[<span class="severity-high">HIGH</span>] app.py:7
+  Rule: COMMAND_INJECTION
+  CWE: CWE-78
+  OWASP: A03:2021 - Injection
+
+  subprocess call with shell=True is vulnerable to command injection
+
+  Remediation: Use shell=False (default) and pass command as a list:
+  subprocess.run(['ls', directory])</div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header fixed">✅ Fixed Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">def</span> <span class="function">list_files</span>():
+    directory = request.args.<span class="function">get</span>(<span class="string">'dir'</span>)
+    <span class="comment"># Use list of arguments, no shell=True</span>
+    result = subprocess.<span class="function">run</span>([<span class="string">'ls'</span>, directory],
+                              capture_output=<span class="keyword">True</span>,
+                              text=<span class="keyword">True</span>)
+    <span class="keyword">return</span> result.stdout</code></pre>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <h4>Why This Is Dangerous</h4>
+                    <p>Command injection allows attackers to execute arbitrary system commands. Input like <code>; rm -rf /</code> could delete your entire filesystem.</p>
+                    <p><strong>Real-world impact:</strong> Complete system compromise, ransomware, cryptocurrency mining.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- HIGH SEVERITY: Hardcoded Secrets -->
+        <div class="rule-showcase" data-severity="high">
+            <div class="rule-header">
+                <div class="rule-title">
+                    <span class="severity-badge severity-high">HIGH</span>
+                    <h3>Hardcoded Secrets</h3>
+                </div>
+                <div class="rule-meta">
+                    <span>Rule: <code>HARDCODED_SECRET</code></span>
+                    <span>CWE-798</span>
+                    <span>OWASP: A07:2021 - Authentication Failures</span>
+                </div>
+            </div>
+            <div class="rule-body">
+                <div class="code-section">
+                    <div class="code-section-header vulnerable">❌ Vulnerable Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">import</span> requests
+
+<span class="comment"># Stripe API key hardcoded in source code</span>
+API_KEY = <span class="string">"sk_live_51HqT2KLm9N8pQr3X4vY5zW6aB7cD8eF"</span>
+
+<span class="keyword">def</span> <span class="function">charge_customer</span>(amount):
+    headers = {<span class="string">"Authorization"</span>: <span class="string">f"Bearer {API_KEY}"</span>}
+    <span class="keyword">return</span> requests.<span class="function">post</span>(<span class="string">"https://api.stripe.com/v1/charges"</span>,
+                          headers=headers)</code></pre>
+                    </div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header detection">🔍 Mikmbr Detection</div>
+                    <div class="detection-output">[<span class="severity-high">HIGH</span>] app.py:4
+  Rule: HARDCODED_SECRET
+  CWE: CWE-798
+  OWASP: A07:2021 - Identification and Authentication Failures
+
+  Hardcoded Stripe API Key detected in 'API_KEY'
+
+  Remediation: Store Stripe API Key in environment variables or a secrets
+  manager. Never commit secrets to version control.</div>
+                </div>
+                <div class="code-section">
+                    <div class="code-section-header fixed">✅ Fixed Code</div>
+                    <div class="code-section-content">
+<pre><code><span class="keyword">import</span> os
+<span class="keyword">import</span> requests
+
+<span class="comment"># Load from environment variable</span>
+API_KEY = os.<span class="function">getenv</span>(<span class="string">'STRIPE_API_KEY'</span>)
+
+<span class="keyword">def</span> <span class="function">charge_customer</span>(amount):
+    <span class="keyword">if</span> <span class="keyword">not</span> API_KEY:
+        <span class="keyword">raise</span> ValueError(<span class="string">"STRIPE_API_KEY not configured"</span>)
+    headers = {<span class="string">"Authorization"</span>: <span class="string">f"Bearer {API_KEY}"</span>}
+    <span class="keyword">return</span> requests.<span class="function">post</span>(<span class="string">"https://api.stripe.com/v1/charges"</span>,
+                          headers=headers)</code></pre>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <h4>Why This Is Dangerous</h4>
+                    <p>Hardcoded secrets end up in version control (Git), CI/CD logs, and production deployments. Anyone with access to your code can use these credentials.</p>
+                    <p><strong>Real-world impact:</strong> Unauthorized API charges ($$$), account takeover, data breaches.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- More rules can be added here with the same pattern -->
+        <div style="text-align: center; padding: 60px 20px; background: #f5f5f5; border-radius: 8px; margin-top: 40px;">
+            <h2>26 Rules Verified and Working</h2>
+            <p style="color: #666; font-size: 1.1em; margin: 20px 0;">Every rule has been tested against real vulnerable code.</p>
+            <p style="color: #666;">More examples coming soon! Check back for updates.</p>
+            <div style="margin-top: 30px;">
+                <a href="docs.html" class="btn btn-primary" style="margin-right: 15px;">View Full Documentation</a>
+                <a href="https://github.com/tonybowen-me/Mikmbr" class="btn btn-secondary">Try Mikmbr Now</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Mikmbr Security Scanner. Open Source. MIT License.</p>
+            <div class="footer-links">
+                <a href="https://github.com/tonybowen-me/Mikmbr">GitHub</a>
+                <a href="https://github.com/tonybowen-me/Mikmbr/issues">Report Issue</a>
+                <a href="docs.html">Documentation</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function filterBySeverity(severity) {
+            const showcases = document.querySelectorAll('.rule-showcase');
+            const buttons = document.querySelectorAll('.filter-btn');
+
+            // Update button states
+            buttons.forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.filter-btn.${severity}`).classList.add('active');
+
+            // Filter showcases
+            showcases.forEach(showcase => {
+                if (severity === 'all') {
+                    showcase.style.display = 'block';
+                } else {
+                    const showcaseSeverity = showcase.getAttribute('data-severity');
+                    showcase.style.display = showcaseSeverity === severity ? 'block' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

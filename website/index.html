@@ -15,7 +15,8 @@
             <div class="nav-links">
                 <a href="#features">Features</a>
                 <a href="#quickstart">Quick Start</a>
-                <a href="#rules">Rules</a>
+                <a href="showcase.html">Showcase</a>
+                <a href="docs.html">Docs</a>
                 <a href="https://github.com/tonybowen-me/Mikmbr" target="_blank">GitHub</a>
             </div>
         </nav>
@@ -229,39 +230,60 @@ Found 3 security issue(s):
     <!-- New Features Section -->
     <section class="new-features">
         <div class="container">
-            <h2>What's New in v1.7</h2>
-            <p class="section-subtitle">CI/CD control and better developer experience</p>
+            <h2>What's New in v1.8</h2>
+            <p class="section-subtitle">Dependency vulnerability scanning with OSV database</p>
 
             <div class="feature-grid">
                 <div class="feature-card">
-                    <!-- <div class="feature-icon">🚦</div> -->
-                    <h3>Exit Code Configuration</h3>
-                    <p>Control when builds fail with <code>--fail-on</code>:</p>
+                    <!-- <div class="feature-icon">📦</div> -->
+                    <h3>Dependency Scanning</h3>
+                    <p>Detect vulnerabilities in third-party packages with <code>--check-deps</code>:</p>
                     <div class="code-block" style="margin-top: 10px;">
-                        <code>mikmbr scan . --fail-on high</code>
+                        <code>mikmbr scan . --check-deps</code>
                     </div>
-                    <p style="margin-top: 8px;">Perfect for gradual security adoption in legacy codebases.</p>
+                    <p style="margin-top: 8px;">Scans requirements.txt and pyproject.toml against OSV database for known CVEs.</p>
                 </div>
 
                 <div class="feature-card">
-                    <!-- <div class="feature-icon">📄</div> -->
-                    <h3>Code Context Lines</h3>
-                    <p>See surrounding code with <code>--context N</code>:</p>
+                    <!-- <div class="feature-icon">🎯</div> -->
+                    <h3>Dependencies-Only Mode</h3>
+                    <p>Skip code analysis with <code>--deps-only</code>:</p>
                     <div class="code-block" style="margin-top: 10px;">
-                        <code>mikmbr scan . --context 3</code>
+                        <code>mikmbr scan . --deps-only</code>
                     </div>
-                    <p style="margin-top: 8px;">Understand issues without opening files.</p>
+                    <p style="margin-top: 8px;">Fast dependency-only scans for CI/CD pipelines.</p>
                 </div>
 
                 <div class="feature-card">
-                    <!-- <div class="feature-icon">⚡</div> -->
-                    <h3>CRITICAL Severity</h3>
-                    <p>New severity level for immediate RCE threats like Server-Side Template Injection.</p>
-                    <p style="margin-top: 8px;"><strong>4 severity levels:</strong> CRITICAL, HIGH, MEDIUM, LOW</p>
+                    <!-- <div class="feature-icon">🌐</div> -->
+                    <h3>OSV Integration</h3>
+                    <p>Powered by Google's Open Source Vulnerabilities database.</p>
+                    <p style="margin-top: 8px;"><strong>Features:</strong> CVE mapping, CVSS scores, fix recommendations</p>
                 </div>
             </div>
 
             <details style="margin-top: 30px;">
+                <summary style="cursor: pointer; font-weight: 600; font-size: 1.1em;">Previous Release - v1.7</summary>
+                <div style="margin-top: 20px;">
+                    <p class="section-subtitle">CI/CD control and better developer experience</p>
+                    <div class="feature-grid" style="margin-top: 20px;">
+                        <div class="feature-card">
+                            <h3>Exit Code Configuration</h3>
+                            <p>Control when builds fail with <code>--fail-on</code>: Perfect for gradual security adoption.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>Code Context Lines</h3>
+                            <p>See surrounding code with <code>--context N</code>: Understand issues without opening files.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3>CRITICAL Severity</h3>
+                            <p>New severity level for immediate RCE threats. 4 levels: CRITICAL, HIGH, MEDIUM, LOW</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <details style="margin-top: 15px;">
                 <summary style="cursor: pointer; font-weight: 600; font-size: 1.1em;">Previous Release - v1.6</summary>
                 <div style="margin-top: 20px;">
                     <p class="section-subtitle">Framework-specific rules and GitHub integration</p>

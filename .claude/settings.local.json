@@ -27,7 +27,9 @@
       "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m pytest tests/test_exit_codes.py::TestExitCodeLogic::test_should_fail_on_critical_with_critical_finding -v)",
       "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m mikmbr.cli scan test_v17_features.py)",
       "Bash(python -m mikmbr.cli scan:*)",
-      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m mikmbr.cli scan test_v17_features.py --context 2)"
+      "Bash(\"/c/Users/Tony/AppData/Local/Programs/Python/Python314/python.exe\" -m mikmbr.cli scan test_v17_features.py --context 2)",
+      "Bash(dir:*)",
+      "Bash(chcp 65001)"
     ]
   }
 }

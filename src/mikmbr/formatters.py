@@ -76,6 +76,9 @@ class HumanFormatter(Formatter):
             if self.verbose and finding.owasp_category:
                 lines.append(f"  OWASP: {finding.owasp_category}")
 
+            if self.verbose and finding.asvs_id:
+                lines.append(f"  ASVS: {finding.asvs_id}")
+
             lines.append(f"  Issue: {finding.message}")
             lines.append(f"  Fix: {finding.remediation}")
 
@@ -169,6 +172,8 @@ class SARIFFormatter(Formatter):
                 rule["properties"]["cwe"] = sample_finding.cwe_id
             if sample_finding.owasp_category:
                 rule["properties"]["owasp"] = sample_finding.owasp_category
+            if sample_finding.asvs_id:
+                rule["properties"]["asvs"] = sample_finding.asvs_id
             if sample_finding.references:
                 rule["help"]["text"] += "\n\nReferences:\n" + "\n".join(f"- {ref}" for ref in sample_finding.references)
 

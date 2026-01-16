@@ -31,6 +31,7 @@ class CommandInjectionRule(Rule):
                         remediation="Use subprocess.run() with a list of arguments instead of shell commands. Never pass untrusted input to os.system().",
                         cwe_id="CWE-78",
                         owasp_category="A03:2021 - Injection",
+                        asvs_id="V5.3.8",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/78.html",
@@ -51,6 +52,7 @@ class CommandInjectionRule(Rule):
                         remediation="Use shell=False (default) and pass command as a list: subprocess.run(['cmd', 'arg1', 'arg2'])",
                         cwe_id="CWE-78",
                         owasp_category="A03:2021 - Injection",
+                        asvs_id="V5.3.8",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/78.html",

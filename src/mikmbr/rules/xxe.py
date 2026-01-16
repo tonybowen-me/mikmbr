@@ -31,6 +31,7 @@ class XXERule(Rule):
                         remediation="Use defusedxml.ElementTree instead of xml.etree.ElementTree, or use lxml with proper security settings. Install with: pip install defusedxml",
                         cwe_id="CWE-611",
                         owasp_category="A05:2021 - Security Misconfiguration",
+                        asvs_id="V5.5.2",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/611.html",
@@ -51,6 +52,7 @@ class XXERule(Rule):
                         remediation="Use defusedxml library which provides secure XML parsing. Install with: pip install defusedxml and replace xml.* imports with defusedxml.*",
                         cwe_id="CWE-611",
                         owasp_category="A05:2021 - Security Misconfiguration",
+                        asvs_id="V5.5.2",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/611.html",
@@ -71,6 +73,7 @@ class XXERule(Rule):
                         remediation="Use XMLParser with resolve_entities=False: parser = lxml.etree.XMLParser(resolve_entities=False); tree = lxml.etree.parse(file, parser)",
                         cwe_id="CWE-611",
                         owasp_category="A05:2021 - Security Misconfiguration",
+                        asvs_id="V5.5.2",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/611.html",

@@ -602,7 +602,7 @@ password_hash = hashlib.md5(password.encode()).hexdigest()
         from src.mikmbr.rules.weak_password_hash import WeakPasswordHashRule
         rule = WeakPasswordHashRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) >= 1
         assert any(f.rule_id == "WEAK_PASSWORD_HASH" for f in findings)
@@ -616,7 +616,7 @@ password_hash = bcrypt.hashpw(password, bcrypt.gensalt())  # Safe
         from src.mikmbr.rules.weak_password_hash import WeakPasswordHashRule
         rule = WeakPasswordHashRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) == 0, "Should not flag bcrypt"
 
@@ -634,7 +634,7 @@ resp.set_cookie('session', 'value', httponly=False)
         from src.mikmbr.rules.insecure_cookie import InsecureCookieRule
         rule = InsecureCookieRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) >= 1
         assert any(f.rule_id == "INSECURE_COOKIE" for f in findings)
@@ -649,7 +649,7 @@ resp.set_cookie('session', 'value', httponly=True, secure=True)  # Safe
         from src.mikmbr.rules.insecure_cookie import InsecureCookieRule
         rule = InsecureCookieRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         # Should either have no findings or only low severity warnings
         high_severity_findings = [f for f in findings if f.severity in [Severity.HIGH, Severity.CRITICAL]]
@@ -668,7 +668,7 @@ token = jwt.encode({'user': 'admin'}, None, algorithm='none')
         from src.mikmbr.rules.jwt_security import JWTSecurityRule
         rule = JWTSecurityRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) >= 1
         assert any(f.rule_id == "JWT_SECURITY" for f in findings)
@@ -682,7 +682,7 @@ token = jwt.encode({'user': 'admin'}, secret_key, algorithm='HS256')  # Safe
         from src.mikmbr.rules.jwt_security import JWTSecurityRule
         rule = JWTSecurityRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) == 0, "Should not flag HS256 with secret"
 
@@ -691,19 +691,143 @@ token = jwt.encode({'user': 'admin'}, secret_key, algorithm='HS256')  # Safe
     # ========================================================================
 
     def test_session_security_detects_weak_config(self):
-        """Verify SESSION_SECURITY detects weak session configuration."""
+        """Verify SESSION_SECURITY detects login without session regeneration."""
         code = """
-from flask import Flask
-app = Flask(__name__)
-app.config['SESSION_COOKIE_HTTPONLY'] = False
+def login(username, password):
+    # Vulnerable: no session regeneration after login
+    if check_password(username, password):
+        session['user'] = username
+        return redirect('/dashboard')
+    return 'Invalid credentials'
 """
         from src.mikmbr.rules.session_security import SessionSecurityRule
         rule = SessionSecurityRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, "test.py")
+        findings = rule.check(tree, code, "test.py")
 
         assert len(findings) >= 1
         assert any(f.rule_id == "SESSION_SECURITY" for f in findings)
+
+    # ========================================================================
+    # UNSAFE_YAML Tests
+    # ========================================================================
+
+    def test_unsafe_yaml_detects_unsafe_load(self):
+        """Verify UNSAFE_YAML detects yaml.unsafe_load()."""
+        code = """
+import yaml
+data = yaml.unsafe_load(user_input)
+"""
+        from src.mikmbr.rules.unsafe_yaml import UnsafeYAMLRule
+        rule = UnsafeYAMLRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) >= 1
+        assert any(f.rule_id == "UNSAFE_YAML" for f in findings)
+
+    def test_unsafe_yaml_detects_load_without_loader(self):
+        """Verify UNSAFE_YAML detects yaml.load() without Loader."""
+        code = """
+import yaml
+data = yaml.load(yaml_string)
+"""
+        from src.mikmbr.rules.unsafe_yaml import UnsafeYAMLRule
+        rule = UnsafeYAMLRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) >= 1
+        assert any(f.rule_id == "UNSAFE_YAML" for f in findings)
+
+    def test_unsafe_yaml_allows_safe_load(self):
+        """Verify UNSAFE_YAML doesn't flag yaml.safe_load()."""
+        code = """
+import yaml
+data = yaml.safe_load(yaml_string)  # Safe
+"""
+        from src.mikmbr.rules.unsafe_yaml import UnsafeYAMLRule
+        rule = UnsafeYAMLRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) == 0, "Should not flag yaml.safe_load()"
+
+    # ========================================================================
+    # UNSAFE_TEMPFILE Tests
+    # ========================================================================
+
+    def test_unsafe_tempfile_detects_mktemp(self):
+        """Verify UNSAFE_TEMPFILE detects tempfile.mktemp()."""
+        code = """
+import tempfile
+path = tempfile.mktemp()
+"""
+        from src.mikmbr.rules.unsafe_tempfile import UnsafeTempfileRule
+        rule = UnsafeTempfileRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) >= 1
+        assert any(f.rule_id == "UNSAFE_TEMPFILE" for f in findings)
+
+    def test_unsafe_tempfile_allows_mkstemp(self):
+        """Verify UNSAFE_TEMPFILE doesn't flag tempfile.mkstemp()."""
+        code = """
+import tempfile
+fd, path = tempfile.mkstemp()  # Safe
+"""
+        from src.mikmbr.rules.unsafe_tempfile import UnsafeTempfileRule
+        rule = UnsafeTempfileRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) == 0, "Should not flag tempfile.mkstemp()"
+
+    # ========================================================================
+    # SSL_VERIFICATION_DISABLED Tests
+    # ========================================================================
+
+    def test_ssl_verification_detects_verify_false(self):
+        """Verify SSL_VERIFICATION_DISABLED detects verify=False."""
+        code = """
+import requests
+response = requests.get(url, verify=False)
+"""
+        from src.mikmbr.rules.ssl_verification import SSLVerificationRule
+        rule = SSLVerificationRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) >= 1
+        assert any(f.rule_id == "SSL_VERIFICATION_DISABLED" for f in findings)
+
+    def test_ssl_verification_detects_unverified_context(self):
+        """Verify SSL_VERIFICATION_DISABLED detects ssl._create_unverified_context()."""
+        code = """
+import ssl
+ctx = ssl._create_unverified_context()
+"""
+        from src.mikmbr.rules.ssl_verification import SSLVerificationRule
+        rule = SSLVerificationRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) >= 1
+        assert any(f.rule_id == "SSL_VERIFICATION_DISABLED" for f in findings)
+
+    def test_ssl_verification_allows_default(self):
+        """Verify SSL_VERIFICATION_DISABLED doesn't flag default requests."""
+        code = """
+import requests
+response = requests.get(url)  # verify=True by default
+"""
+        from src.mikmbr.rules.ssl_verification import SSLVerificationRule
+        rule = SSLVerificationRule()
+        tree = ast.parse(code)
+        findings = rule.check(tree, code, "test.py")
+
+        assert len(findings) == 0, "Should not flag requests with default verify"
 
 
 class TestNegativeCases:
@@ -768,7 +892,7 @@ class TestRuleCoverage:
 
         # This is a meta-test - verifies test coverage
         # In practice, we'd check test method names match rule IDs
-        assert len(rule_ids) == 24, f"Expected 24 rules, found {len(rule_ids)}"
+        assert len(rule_ids) == 27, f"Expected 27 rules, found {len(rule_ids)}"
 
         # TODO: Implement automated verification that every rule has tests
         print(f"\nRules to test: {', '.join(rule_ids)}")
@@ -782,7 +906,7 @@ class TestTransparency:
 
     def test_rule_count_matches_documentation(self):
         """Verify rule count matches what we advertise."""
-        assert len(ALL_RULES) == 24, "Rule count must match documentation"
+        assert len(ALL_RULES) == 27, "Rule count must match documentation"
 
     def test_all_rules_have_metadata(self):
         """Verify every rule has required metadata."""

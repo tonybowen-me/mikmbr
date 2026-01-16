@@ -31,6 +31,7 @@ class PathTraversalRule(Rule):
                         remediation="Use os.path.join() with proper validation, or use pathlib.Path. Validate that the final path is within the expected directory using os.path.commonprefix() or Path.resolve().",
                         cwe_id="CWE-22",
                         owasp_category="A01:2021 - Broken Access Control",
+                        asvs_id="V12.1.1",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/22.html",
@@ -51,6 +52,7 @@ class PathTraversalRule(Rule):
                         remediation="Validate input: reject paths containing '..' or starting with '/'. Use os.path.abspath() and verify the result is within the expected directory.",
                         cwe_id="CWE-22",
                         owasp_category="A01:2021 - Broken Access Control",
+                        asvs_id="V12.1.1",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/22.html",

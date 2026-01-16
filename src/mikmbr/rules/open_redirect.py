@@ -40,6 +40,7 @@ class OpenRedirectRule(Rule):
                                 remediation="Validate redirect URLs against an allowlist or use relative URLs only. Example: if url.startswith('/'): redirect(url)",
                                 cwe_id="CWE-601",
                                 owasp_category="A01:2021 - Broken Access Control",
+                                asvs_id="V5.1.5",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/601.html",
@@ -68,6 +69,7 @@ class OpenRedirectRule(Rule):
                                         remediation="Validate redirect URLs before setting Location header.",
                                         cwe_id="CWE-601",
                                         owasp_category="A01:2021 - Broken Access Control",
+                                        asvs_id="V5.1.5",
                                         code_snippet=self.extract_code_snippet(source, node.lineno),
                                         references=[
                                             "https://cwe.mitre.org/data/definitions/601.html",

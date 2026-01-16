@@ -31,6 +31,7 @@ class BareExceptRule(Rule):
                         remediation="Specify exception types: except ValueError: or except (TypeError, ValueError): or use except Exception: to avoid catching system exits.",
                         cwe_id="CWE-705",
                         owasp_category="A04:2021 - Insecure Design",
+                        asvs_id="V7.4.1",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/705.html",

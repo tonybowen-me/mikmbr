@@ -31,6 +31,7 @@ class WeakCryptoRule(Rule):
                         remediation=f"Replace {weak_algo} with SHA-256 or stronger: hashlib.sha256() or hashlib.sha512()",
                         cwe_id="CWE-327",
                         owasp_category="A02:2021 - Cryptographic Failures",
+                        asvs_id="V6.2.1",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/327.html",

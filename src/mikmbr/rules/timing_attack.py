@@ -42,6 +42,7 @@ class TimingAttackRule(Rule):
                             remediation="Use secrets.compare_digest() for constant-time comparison: if secrets.compare_digest(password, stored_password): ...",
                             cwe_id="CWE-208",
                             owasp_category="A02:2021 - Cryptographic Failures",
+                            asvs_id="V6.2.5",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/208.html",

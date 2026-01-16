@@ -49,6 +49,7 @@ class RegexDosRule(Rule):
                             remediation="Review regex for nested quantifiers like (a+)+ or (a*)* which can cause exponential backtracking. Use atomic groups or possessive quantifiers, or refactor the pattern. Test with long inputs.",
                             cwe_id="CWE-1333",
                             owasp_category="A05:2021 - Security Misconfiguration",
+                            asvs_id="V11.1.4",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/1333.html",

@@ -2,8 +2,9 @@
 
 import ast
 from typing import List
+
 from .base import Rule
-from ..models import Finding, Severity
+from ..models import Finding, Severity, Confidence
 
 
 class InsecureCookieRule(Rule):
@@ -17,12 +18,11 @@ class InsecureCookieRule(Rule):
     - response.set_cookie('session', value, httponly=True, secure=True, samesite='Strict')
     """
 
-    rule_id = "INSECURE_COOKIE"
-    severity = Severity.MEDIUM
-    cwe_id = "CWE-614"
-    owasp_category = "A05:2021 - Security Misconfiguration"
+    @property
+    def rule_id(self) -> str:
+        return "INSECURE_COOKIE"
 
-    def check(self, tree: ast.AST, filename: str) -> List[Finding]:
+    def check(self, tree: ast.AST, source: str, filepath: str) -> List[Finding]:
         """Check for insecure cookie settings."""
         findings = []
 
@@ -33,15 +33,22 @@ class InsecureCookieRule(Rule):
                     missing_flags = self._get_missing_security_flags(node)
                     if missing_flags:
                         findings.append(Finding(
+                            file=filepath,
+                            line=node.lineno,
                             rule_id=self.rule_id,
-                            severity=self.severity,
-                            filename=filename,
-                            line_number=node.lineno,
+                            severity=Severity.MEDIUM,
+                            confidence=Confidence.HIGH,
                             message=f"Cookie set without security flags: {', '.join(missing_flags)}",
-                            code_snippet=ast.get_source_segment(open(filename).read(), node) if hasattr(ast, 'get_source_segment') else None,
-                            cwe_id=self.cwe_id,
-                            owasp_category=self.owasp_category,
-                            recommendation="Set security flags: set_cookie(..., httponly=True, secure=True, samesite='Strict')"
+                            remediation="Set security flags: set_cookie(..., httponly=True, secure=True, samesite='Strict')",
+                            cwe_id="CWE-614",
+                            owasp_category="A05:2021 - Security Misconfiguration",
+                            asvs_id="V3.4.2",
+                            code_snippet=self.extract_code_snippet(source, node.lineno),
+                            references=[
+                                "https://cwe.mitre.org/data/definitions/614.html",
+                                "https://owasp.org/Top10/A05_2021-Security_Misconfiguration/",
+                                "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+                            ]
                         ))
 
         return findings

@@ -31,6 +31,7 @@ class InsecureDeserializationRule(Rule):
                         remediation="Never unpickle data from untrusted sources. Use JSON or other safe serialization formats. If pickle is required, validate data source and use HMAC signatures.",
                         cwe_id="CWE-502",
                         owasp_category="A08:2021 - Software and Data Integrity Failures",
+                        asvs_id="V5.5.3",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/502.html",
@@ -51,6 +52,7 @@ class InsecureDeserializationRule(Rule):
                         remediation="Use yaml.safe_load() or yaml.load(data, Loader=yaml.SafeLoader) instead of yaml.load()",
                         cwe_id="CWE-502",
                         owasp_category="A08:2021 - Software and Data Integrity Failures",
+                        asvs_id="V5.5.3",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/502.html",

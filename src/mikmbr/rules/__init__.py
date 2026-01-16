@@ -25,6 +25,9 @@ from .session_security import SessionSecurityRule
 from .django_security import DjangoSecurityRule
 from .flask_security import FlaskSecurityRule
 from .fastapi_security import FastAPISecurityRule
+from .unsafe_yaml import UnsafeYAMLRule
+from .unsafe_tempfile import UnsafeTempfileRule
+from .ssl_verification import SSLVerificationRule
 
 # Registry of all available rules
 ALL_RULES = [
@@ -52,6 +55,9 @@ ALL_RULES = [
     DjangoSecurityRule(),
     FlaskSecurityRule(),
     FastAPISecurityRule(),
+    UnsafeYAMLRule(),
+    UnsafeTempfileRule(),
+    SSLVerificationRule(),
 ]
 
 __all__ = [

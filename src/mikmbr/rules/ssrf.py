@@ -48,6 +48,7 @@ class SSRFRule(Rule):
                                     remediation="Validate and sanitize URLs. Use allowlist of permitted domains. Example: if urlparse(url).netloc in ALLOWED_HOSTS: ...",
                                     cwe_id="CWE-918",
                                     owasp_category="A10:2021 - Server-Side Request Forgery (SSRF)",
+                                    asvs_id="V12.6.1",
                                     code_snippet=self.extract_code_snippet(source, node.lineno),
                                     references=[
                                         "https://cwe.mitre.org/data/definitions/918.html",
@@ -70,6 +71,7 @@ class SSRFRule(Rule):
                                 remediation="Validate URLs against an allowlist before making requests.",
                                 cwe_id="CWE-918",
                                 owasp_category="A10:2021 - Server-Side Request Forgery (SSRF)",
+                                asvs_id="V12.6.1",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/918.html",

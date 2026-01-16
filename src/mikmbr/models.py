@@ -32,6 +32,7 @@ class Finding:
     confidence: Confidence = Confidence.HIGH
     cwe_id: Optional[str] = None
     owasp_category: Optional[str] = None
+    asvs_id: Optional[str] = None
     code_snippet: Optional[str] = None
     references: List[str] = field(default_factory=list)
 
@@ -47,6 +48,7 @@ class Finding:
             "remediation": self.remediation,
             "cwe_id": self.cwe_id,
             "owasp_category": self.owasp_category,
+            "asvs_id": self.asvs_id,
             "code_snippet": self.code_snippet,
             "references": self.references,
         }

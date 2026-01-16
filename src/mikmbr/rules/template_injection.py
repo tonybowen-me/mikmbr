@@ -40,6 +40,7 @@ class TemplateInjectionRule(Rule):
                                 remediation="Never pass user input directly to Template(). Use predefined templates and render with safe context.",
                                 cwe_id="CWE-94",
                                 owasp_category="A03:2021 - Injection",
+                                asvs_id="V5.2.2",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/94.html",
@@ -61,6 +62,7 @@ class TemplateInjectionRule(Rule):
                                 remediation="Use render_template() with file-based templates instead. Never pass user input to render_template_string().",
                                 cwe_id="CWE-94",
                                 owasp_category="A03:2021 - Injection",
+                                asvs_id="V5.2.2",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/94.html",
@@ -82,6 +84,7 @@ class TemplateInjectionRule(Rule):
                                 remediation="Use file-based templates instead of string templates.",
                                 cwe_id="CWE-94",
                                 owasp_category="A03:2021 - Injection",
+                                asvs_id="V5.2.2",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/94.html"

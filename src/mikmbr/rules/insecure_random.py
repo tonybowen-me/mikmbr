@@ -41,6 +41,7 @@ class InsecureRandomRule(Rule):
                             remediation="Use the 'secrets' module instead of 'random' for security-sensitive operations: secrets.token_bytes(), secrets.token_hex(), secrets.choice(), etc.",
                             cwe_id="CWE-338",
                             owasp_category="A02:2021 - Cryptographic Failures",
+                            asvs_id="V6.3.1",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/338.html",

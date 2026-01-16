@@ -2,8 +2,9 @@
 
 import ast
 from typing import List
+
 from .base import Rule
-from ..models import Finding, Severity
+from ..models import Finding, Severity, Confidence
 
 
 class SessionSecurityRule(Rule):
@@ -20,18 +21,17 @@ class SessionSecurityRule(Rule):
     - Use cryptographically random session IDs
     """
 
-    rule_id = "SESSION_SECURITY"
-    severity = Severity.MEDIUM
-    cwe_id = "CWE-384"
-    owasp_category = "A07:2021 - Identification and Authentication Failures"
-
     # Login-related function names
     LOGIN_INDICATORS = {
         'login', 'signin', 'authenticate', 'auth',
         'log_in', 'sign_in', 'do_login', 'user_login'
     }
 
-    def check(self, tree: ast.AST, filename: str) -> List[Finding]:
+    @property
+    def rule_id(self) -> str:
+        return "SESSION_SECURITY"
+
+    def check(self, tree: ast.AST, source: str, filepath: str) -> List[Finding]:
         """Check for session security issues."""
         findings = []
 
@@ -41,15 +41,22 @@ class SessionSecurityRule(Rule):
                 if self._is_login_function(node):
                     if not self._has_session_regeneration(node):
                         findings.append(Finding(
+                            file=filepath,
+                            line=node.lineno,
                             rule_id=self.rule_id,
-                            severity=self.severity,
-                            filename=filename,
-                            line_number=node.lineno,
+                            severity=Severity.MEDIUM,
+                            confidence=Confidence.MEDIUM,
                             message="Login function missing session regeneration (session fixation risk)",
-                            code_snippet=ast.get_source_segment(open(filename).read(), node) if hasattr(ast, 'get_source_segment') else None,
-                            cwe_id=self.cwe_id,
-                            owasp_category=self.owasp_category,
-                            recommendation="Regenerate session after login: session.regenerate() or session.clear() + session.new()"
+                            remediation="Regenerate session after login: session.regenerate() or session.clear() + session.new()",
+                            cwe_id="CWE-384",
+                            owasp_category="A07:2021 - Identification and Authentication Failures",
+                            asvs_id="V3.2.1",
+                            code_snippet=self.extract_code_snippet(source, node.lineno),
+                            references=[
+                                "https://cwe.mitre.org/data/definitions/384.html",
+                                "https://owasp.org/Top10/A07_2021-Identification_and_Authentication_Failures/",
+                                "https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html"
+                            ]
                         ))
 
         return findings

@@ -2,8 +2,9 @@
 
 import ast
 from typing import List
+
 from .base import Rule
-from ..models import Finding, Severity
+from ..models import Finding, Severity, Confidence
 
 
 class WeakPasswordHashRule(Rule):
@@ -21,10 +22,9 @@ class WeakPasswordHashRule(Rule):
     - scrypt
     """
 
-    rule_id = "WEAK_PASSWORD_HASH"
-    severity = Severity.HIGH
-    cwe_id = "CWE-916"
-    owasp_category = "A02:2021 - Cryptographic Failures"
+    @property
+    def rule_id(self) -> str:
+        return "WEAK_PASSWORD_HASH"
 
     # Weak hashing functions for passwords
     WEAK_HASH_FUNCS = {
@@ -38,20 +38,20 @@ class WeakPasswordHashRule(Rule):
         'credential', 'auth', 'login', 'user_input'
     }
 
-    def check(self, tree: ast.AST, filename: str) -> List[Finding]:
+    def check(self, tree: ast.AST, source: str, filepath: str) -> List[Finding]:
         """Check for weak password hashing."""
         findings = []
 
         for node in ast.walk(tree):
             # Check for hashlib.md5(password), hashlib.sha1(password), etc.
             if isinstance(node, ast.Call):
-                finding = self._check_hashlib_call(node, filename)
+                finding = self._check_hashlib_call(node, source, filepath)
                 if finding:
                     findings.append(finding)
 
         return findings
 
-    def _check_hashlib_call(self, node: ast.Call, filename: str) -> Finding:
+    def _check_hashlib_call(self, node: ast.Call, source: str, filepath: str) -> Finding:
         """Check if this is a weak hashlib call on password data."""
         # Check for hashlib.md5(...), hashlib.sha1(...), etc.
         if isinstance(node.func, ast.Attribute):
@@ -62,15 +62,22 @@ class WeakPasswordHashRule(Rule):
                 # Check if argument looks like a password
                 if node.args and self._looks_like_password(node.args[0]):
                     return Finding(
+                        file=filepath,
+                        line=node.lineno,
                         rule_id=self.rule_id,
-                        severity=self.severity,
-                        filename=filename,
-                        line_number=node.lineno,
+                        severity=Severity.HIGH,
+                        confidence=Confidence.MEDIUM,
                         message=f"Weak password hashing algorithm: {node.func.attr}",
-                        code_snippet=ast.get_source_segment(open(filename).read(), node) if hasattr(ast, 'get_source_segment') else None,
-                        cwe_id=self.cwe_id,
-                        owasp_category=self.owasp_category,
-                        recommendation="Use bcrypt, argon2, or PBKDF2: import bcrypt; bcrypt.hashpw(password.encode(), bcrypt.gensalt())"
+                        remediation="Use bcrypt, argon2, or PBKDF2: import bcrypt; bcrypt.hashpw(password.encode(), bcrypt.gensalt())",
+                        cwe_id="CWE-916",
+                        owasp_category="A02:2021 - Cryptographic Failures",
+                        asvs_id="V2.4.1",
+                        code_snippet=self.extract_code_snippet(source, node.lineno),
+                        references=[
+                            "https://cwe.mitre.org/data/definitions/916.html",
+                            "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/",
+                            "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+                        ]
                     )
 
         return None

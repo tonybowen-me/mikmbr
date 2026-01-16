@@ -132,6 +132,7 @@ class HardcodedSecretsRule(Rule):
                     remediation=f"Store {pattern_name} in environment variables or a secrets manager. Never commit secrets to version control.",
                     cwe_id="CWE-798",
                     owasp_category="A07:2021 - Identification and Authentication Failures",
+                    asvs_id="V6.4.2",
                     code_snippet=self.extract_code_snippet(source, line),
                     references=[
                         "https://cwe.mitre.org/data/definitions/798.html",
@@ -152,6 +153,7 @@ class HardcodedSecretsRule(Rule):
                 remediation="If this is a secret, store it in environment variables. If it's not a secret, consider using a more descriptive variable name or add to exclusion list.",
                 cwe_id="CWE-798",
                 owasp_category="A07:2021 - Identification and Authentication Failures",
+                asvs_id="V6.4.2",
                 code_snippet=self.extract_code_snippet(source, line),
                 references=[
                     "https://cwe.mitre.org/data/definitions/798.html",
@@ -173,6 +175,7 @@ class HardcodedSecretsRule(Rule):
                 remediation="Store secrets in environment variables or a secrets manager. Use os.getenv() or a library like python-dotenv.",
                 cwe_id="CWE-798",
                 owasp_category="A07:2021 - Identification and Authentication Failures",
+                asvs_id="V6.4.2",
                 code_snippet=self.extract_code_snippet(source, line),
                 references=[
                     "https://cwe.mitre.org/data/definitions/798.html",

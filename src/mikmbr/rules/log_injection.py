@@ -40,6 +40,7 @@ class LogInjectionRule(Rule):
                                 remediation="Sanitize user input before logging. Remove newlines and control characters. Use structured logging with separate fields for user data.",
                                 cwe_id="CWE-117",
                                 owasp_category="A09:2021 - Security Logging and Monitoring Failures",
+                                asvs_id="V7.1.1",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/117.html",
@@ -61,6 +62,7 @@ class LogInjectionRule(Rule):
                             remediation="Use proper logging library instead of print(). Sanitize user input.",
                             cwe_id="CWE-117",
                             owasp_category="A09:2021 - Security Logging and Monitoring Failures",
+                            asvs_id="V7.1.1",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/117.html",

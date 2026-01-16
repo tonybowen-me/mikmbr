@@ -34,6 +34,7 @@ class DebugCodeRule(Rule):
                                     remediation="Set debug=False in production. Use environment variables: app.debug = os.getenv('DEBUG', 'False') == 'True'",
                                     cwe_id="CWE-489",
                                     owasp_category="A05:2021 - Security Misconfiguration",
+                                    asvs_id="V14.3.2",
                                     code_snippet=self.extract_code_snippet(source, node.lineno),
                                     references=[
                                         "https://cwe.mitre.org/data/definitions/489.html",
@@ -55,6 +56,7 @@ class DebugCodeRule(Rule):
                             remediation="Remove breakpoint() calls before deploying to production.",
                             cwe_id="CWE-489",
                             owasp_category="A05:2021 - Security Misconfiguration",
+                            asvs_id="V14.3.2",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/489.html"
@@ -73,6 +75,7 @@ class DebugCodeRule(Rule):
                             remediation="Remove pdb.set_trace() calls before deploying.",
                             cwe_id="CWE-489",
                             owasp_category="A05:2021 - Security Misconfiguration",
+                            asvs_id="V14.3.2",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/489.html"
@@ -93,6 +96,7 @@ class DebugCodeRule(Rule):
                         remediation="Use explicit if statements for security checks, not assert. Assert statements are removed when Python is run with -O flag.",
                         cwe_id="CWE-617",
                         owasp_category="A04:2021 - Insecure Design",
+                        asvs_id="V14.3.2",
                         code_snippet=self.extract_code_snippet(source, node.lineno),
                         references=[
                             "https://cwe.mitre.org/data/definitions/617.html",

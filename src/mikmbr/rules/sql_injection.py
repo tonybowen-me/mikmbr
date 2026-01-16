@@ -34,6 +34,7 @@ class SQLInjectionRule(Rule):
                                 remediation="Use parameterized queries with placeholders: cursor.execute('SELECT * FROM users WHERE id = ?', (user_id,))",
                                 cwe_id="CWE-89",
                                 owasp_category="A03:2021 - Injection",
+                                asvs_id="V5.3.4",
                                 code_snippet=self.extract_code_snippet(source, node.lineno),
                                 references=[
                                     "https://cwe.mitre.org/data/definitions/89.html",

@@ -32,6 +32,7 @@ class DangerousExecRule(Rule):
                             remediation=f"Avoid {node.func.id}(). Use safer alternatives like ast.literal_eval() for data or refactor to eliminate dynamic code execution.",
                             cwe_id="CWE-95",
                             owasp_category="A03:2021 - Injection",
+                            asvs_id="V5.2.8",
                             code_snippet=self.extract_code_snippet(source, node.lineno),
                             references=[
                                 "https://cwe.mitre.org/data/definitions/95.html",

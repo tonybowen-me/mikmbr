@@ -42,8 +42,8 @@ class TestExitCodeLogic:
     def test_should_not_fail_on_critical_with_only_high(self):
         """Test that CRITICAL threshold passes when only HIGH findings exist."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-            # SQL injection is HIGH severity
-            f.write('query = f"SELECT * FROM users WHERE id = {user_id}"\n')
+            # SQL injection with cursor.execute() is HIGH severity
+            f.write('cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')
             f.flush()
             filepath = f.name
 
@@ -69,8 +69,8 @@ class TestExitCodeLogic:
     def test_should_fail_on_high_with_high_finding(self):
         """Test that HIGH threshold fails when HIGH finding exists."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-            # SQL injection is HIGH severity
-            f.write('query = f"SELECT * FROM users WHERE id = {user_id}"\n')
+            # SQL injection with cursor.execute() is HIGH severity
+            f.write('cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')
             f.flush()
             filepath = f.name
 
@@ -95,9 +95,11 @@ class TestExitCodeLogic:
     def test_should_not_fail_on_high_with_only_medium(self):
         """Test that HIGH threshold passes when only MEDIUM findings exist."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-            # Weak crypto is MEDIUM severity
+            # Weak crypto with non-password named variable is MEDIUM severity
+            # Using variable without password-related name avoids WEAK_PASSWORD_HASH rule
             f.write('import hashlib\n')
-            f.write('password_hash = hashlib.md5(password.encode())\n')
+            f.write('file_content = b"some data"\n')
+            f.write('checksum = hashlib.md5(file_content)\n')
             f.flush()
             filepath = f.name
 
@@ -126,9 +128,9 @@ class TestExitCodeLogic:
     def test_should_fail_on_medium_with_medium_finding(self):
         """Test that MEDIUM threshold fails when MEDIUM finding exists."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-            # Weak crypto is MEDIUM severity
+            # Weak crypto with non-password data is MEDIUM severity
             f.write('import hashlib\n')
-            f.write('password_hash = hashlib.md5(password.encode())\n')
+            f.write('data_hash = hashlib.md5(data.encode())\n')
             f.flush()
             filepath = f.name
 
@@ -217,9 +219,9 @@ class TestExitCodeLogic:
             # Multiple severities
             f.write('import hashlib\n')
             f.write('# HIGH - SQL injection\n')
-            f.write('query = f"SELECT * FROM users WHERE id = {user_id}"\n')
+            f.write('cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')
             f.write('# MEDIUM - Weak crypto\n')
-            f.write('password_hash = hashlib.md5(password.encode())\n')
+            f.write('data_hash = hashlib.md5(data.encode())\n')
             f.write('# LOW - Bare except\n')
             f.write('try:\n')
             f.write('    risky_operation()\n')

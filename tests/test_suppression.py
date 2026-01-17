@@ -151,10 +151,12 @@ class TestSuppressionIntegration:
         """Test that inline suppression actually works with scanner."""
         from mikmbr.scanner import Scanner
 
-        test_file = tmp_path / "test.py"
+        # Use app.py instead of test.py to avoid test file filtering
+        test_file = tmp_path / "app.py"
+        # Use realistic secrets that won't be filtered as placeholders
         test_file.write_text("""
-api_key = "sk_live_1234567890"  # mikmbr: ignore[HARDCODED_SECRET]
-password = "password123"  # Should be detected
+api_key = "sk_live_xK9mZnQpRsTuVwXy"  # mikmbr: ignore[HARDCODED_SECRET]
+password = "MyR3allyStr0ngP@ssword"  # Should be detected
 """)
 
         scanner = Scanner()
@@ -168,14 +170,16 @@ password = "password123"  # Should be detected
         """Test block suppression with scanner."""
         from mikmbr.scanner import Scanner
 
-        test_file = tmp_path / "test.py"
+        # Use app.py instead of test.py to avoid test file filtering
+        test_file = tmp_path / "app.py"
+        # Use realistic secrets that won't be filtered as placeholders
         test_file.write_text("""
 # mikmbr: disable
-api_key = "sk_live_1234567890"
-password = "password123"
+api_key = "sk_live_xK9mZnQpRsTuVwXy"
+password = "MyR3allyStr0ngP@ssword"
 result = eval(user_input)
 # mikmbr: enable
-token = "secret_token_456"  # Should be detected
+token = "xK9mZnQpRsTuVwXyZaBcDeFgHiJk"  # Should be detected
 """)
 
         scanner = Scanner()

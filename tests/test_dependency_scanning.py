@@ -392,5 +392,6 @@ class TestDependencyScannerIntegration:
             # Should find 1 vulnerability in django
             assert len(findings) == 1
             assert findings[0].severity == Severity.HIGH
-            assert "django" in findings[0].file.lower()
+            assert "requirements.txt" in findings[0].file.lower()
+            assert "django" in findings[0].message.lower()
             assert findings[0].line == 1  # First line

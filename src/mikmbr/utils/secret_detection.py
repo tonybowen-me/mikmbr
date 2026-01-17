@@ -157,23 +157,36 @@ def is_test_file(filepath: str, custom_patterns: Optional[List[str]] = None) -> 
         True if file appears to be a test file
     """
     import fnmatch
+    import os
 
     filepath_lower = filepath.lower()
+    filename_lower = os.path.basename(filepath_lower)
 
-    default_indicators = [
+    # Directory-based indicators (check full path)
+    dir_indicators = [
         '/test/', '\\test\\',
         '/tests/', '\\tests\\',
-        'test_', '_test.py',
         '/spec/', '\\spec\\',
         '/fixture/', '\\fixture\\',
         '/fixtures/', '\\fixtures\\',
         '/mock/', '\\mock\\',
         '/example/', '\\example\\',
+    ]
+
+    # Filename-based indicators (check only filename)
+    filename_indicators = [
+        'test_',      # test_foo.py
+        '_test.py',   # foo_test.py
         'conftest.py',
     ]
 
-    # Check default indicators
-    if any(indicator in filepath_lower for indicator in default_indicators):
+    # Check directory-based indicators
+    if any(indicator in filepath_lower for indicator in dir_indicators):
+        return True
+
+    # Check filename-based indicators (only on the filename, not full path)
+    if any(filename_lower.startswith(ind) or filename_lower.endswith(ind) or filename_lower == ind
+           for ind in filename_indicators):
         return True
 
     # Check custom patterns if provided

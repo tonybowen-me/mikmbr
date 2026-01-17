@@ -12,7 +12,7 @@ class TestContextLines:
     """Tests for code context extraction and display."""
 
     def test_extract_context_with_zero_lines(self):
-        """Test context extraction with 0 lines (default)."""
+        """Test context extraction with 0 lines before/after (shows only target line)."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             f.write('line1 = "test"\n')
             f.write('query = f"SELECT * FROM users WHERE id = {user_id}"\n')  # Line 2
@@ -24,9 +24,11 @@ class TestContextLines:
             formatter = HumanFormatter()
             formatter.context = 0
 
-            # Should return empty string for 0 context
+            # With context=0, shows only the target line (no surrounding lines)
             result = formatter.extract_context_lines(filepath, 2, 0)
-            assert result == ""
+            assert '2 |' in result
+            assert '1 |' not in result
+            assert '3 |' not in result
         finally:
             os.unlink(filepath)
 
@@ -47,8 +49,8 @@ class TestContextLines:
             assert '1 |' in result
             assert '2 |' in result
             assert '3 |' in result
-            # Line 2 should have > marker
-            assert '>  2 |' in result or '> 2 |' in result
+            # Line 2 should have > marker (4-digit alignment)
+            assert '>    2 |' in result
         finally:
             os.unlink(filepath)
 
@@ -67,8 +69,8 @@ class TestContextLines:
             # Should include lines 2-8 (5 +/- 3)
             for line_num in range(2, 9):
                 assert f'{line_num} |' in result
-            # Line 5 should have > marker
-            assert '>  5 |' in result or '> 5 |' in result
+            # Line 5 should have > marker (4-digit alignment)
+            assert '>    5 |' in result
         finally:
             os.unlink(filepath)
 
@@ -89,8 +91,8 @@ class TestContextLines:
             assert '1 |' in result
             assert '2 |' in result
             assert '3 |' in result
-            # Line 1 should have > marker
-            assert '>  1 |' in result or '> 1 |' in result
+            # Line 1 should have > marker (4-digit alignment)
+            assert '>    1 |' in result
         finally:
             os.unlink(filepath)
 
@@ -111,8 +113,8 @@ class TestContextLines:
             assert '1 |' in result
             assert '2 |' in result
             assert '3 |' in result
-            # Line 3 should have > marker
-            assert '>  3 |' in result or '> 3 |' in result
+            # Line 3 should have > marker (4-digit alignment)
+            assert '>    3 |' in result
         finally:
             os.unlink(filepath)
 
@@ -137,8 +139,8 @@ class TestContextLines:
             assert '3 |' in result
             assert '4 |' in result
             assert '5 |' in result
-            # Line 3 should have > marker
-            assert '>  3 |' in result or '> 3 |' in result
+            # Line 3 should have > marker (4-digit alignment)
+            assert '>    3 |' in result
         finally:
             os.unlink(filepath)
 
@@ -174,14 +176,17 @@ class TestContextLines:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             f.write('import sqlite3\n')
             f.write('def get_user(user_id):\n')
-            f.write('    query = f"SELECT * FROM users WHERE id = {user_id}"\n')  # Line 3
-            f.write('    cursor.execute(query)\n')
+            f.write('    cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')  # Line 3
+            f.write('    return cursor.fetchone()\n')
             f.flush()
             filepath = f.name
 
         try:
             scanner = Scanner()
             findings = scanner.scan_file(filepath)
+
+            # Should find SQL injection
+            assert len(findings) > 0
 
             # Format with context
             formatter = HumanFormatter(verbose=False)
@@ -203,7 +208,7 @@ class TestContextLines:
     def test_format_without_context_no_code_block(self):
         """Test that HumanFormatter omits context when context=0."""
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
-            f.write('query = f"SELECT * FROM users WHERE id = {user_id}"\n')
+            f.write('cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')
             f.flush()
             filepath = f.name
 
@@ -211,13 +216,15 @@ class TestContextLines:
             scanner = Scanner()
             findings = scanner.scan_file(filepath)
 
+            # Should find SQL injection
+            assert len(findings) > 0
+
             # Format without context
             formatter = HumanFormatter(verbose=False)
             formatter.context = 0
             output = formatter.format(findings)
 
-            # Should NOT include "Code:" section (unless verbose)
-            # With context=0 and verbose=False, no code should be shown
+            # Should have output but no Code: section with context=0 and verbose=False
             assert len(output) > 0  # Has some output
         finally:
             os.unlink(filepath)
@@ -227,14 +234,17 @@ class TestContextLines:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False) as f:
             f.write('import sqlite3\n')
             f.write('def get_user(user_id):\n')
-            f.write('    query = f"SELECT * FROM users WHERE id = {user_id}"\n')  # Line 3
-            f.write('    cursor.execute(query)\n')
+            f.write('    cursor.execute(f"SELECT * FROM users WHERE id = {user_id}")\n')  # Line 3
+            f.write('    return cursor.fetchone()\n')
             f.flush()
             filepath = f.name
 
         try:
             scanner = Scanner()
             findings = scanner.scan_file(filepath)
+
+            # Should find SQL injection
+            assert len(findings) > 0
 
             # Format with both verbose and context
             formatter = HumanFormatter(verbose=True)
@@ -260,17 +270,17 @@ class TestContextLines:
         try:
             formatter = HumanFormatter()
 
-            # Test line 5 (single digit)
+            # Test line 5 (single digit, 4-digit alignment)
             result = formatter.extract_context_lines(filepath, 5, 2)
-            assert '>  5 |' in result or '> 5 |' in result
+            assert '>    5 |' in result
 
-            # Test line 50 (double digit)
+            # Test line 50 (double digit, 4-digit alignment)
             result = formatter.extract_context_lines(filepath, 50, 2)
-            assert '> 50 |' in result or '>50 |' in result
+            assert '>   50 |' in result
 
-            # Test line 99 (double digit)
+            # Test line 99 (double digit, 4-digit alignment)
             result = formatter.extract_context_lines(filepath, 99, 2)
-            assert '> 99 |' in result or '>99 |' in result
+            assert '>   99 |' in result
         finally:
             os.unlink(filepath)
 

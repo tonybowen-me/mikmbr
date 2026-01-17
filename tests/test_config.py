@@ -6,7 +6,7 @@ import tempfile
 import yaml
 
 from mikmbr.config import (
-    AiriskConfig,
+    MikmbrConfig,
     RuleConfig,
     SecretDetectionConfig,
     OutputConfig,
@@ -19,7 +19,7 @@ class TestConfigLoading:
 
     def test_default_config(self):
         """Test that default configuration has expected values."""
-        config = AiriskConfig()
+        config = MikmbrConfig()
 
         assert config.version == "1.4"
         assert config.output.format == "human"
@@ -44,7 +44,7 @@ class TestConfigLoading:
             }
         }
 
-        config = AiriskConfig.from_dict(data)
+        config = MikmbrConfig.from_dict(data)
 
         assert config.version == '1.4'
         assert config.rules['DANGEROUS_EXEC'].enabled is False
@@ -74,7 +74,7 @@ output:
             temp_path = Path(f.name)
 
         try:
-            config = AiriskConfig.from_file(temp_path)
+            config = MikmbrConfig.from_file(temp_path)
 
             assert config.version == '1.4'
             assert config.rules['HARDCODED_SECRETS'].enabled is True
@@ -88,12 +88,12 @@ output:
 
     def test_load_nonexistent_file(self):
         """Test loading from nonexistent file returns default config."""
-        config = AiriskConfig.from_file(Path('/nonexistent/config.yaml'))
+        config = MikmbrConfig.from_file(Path('/nonexistent/config.yaml'))
         assert config.version == '1.4'  # Default version
 
     def test_is_rule_enabled(self):
         """Test checking if a rule is enabled."""
-        config = AiriskConfig.from_dict({
+        config = MikmbrConfig.from_dict({
             'rules': {
                 'DANGEROUS_EXEC': False,
                 'SQL_INJECTION': True
@@ -106,7 +106,7 @@ output:
 
     def test_get_rule_config(self):
         """Test getting rule configuration."""
-        config = AiriskConfig.from_dict({
+        config = MikmbrConfig.from_dict({
             'rules': {
                 'SQL_INJECTION': {
                     'enabled': True,
@@ -160,7 +160,7 @@ class TestSecretDetectionConfig:
             }
         }
 
-        config = AiriskConfig.from_dict(data)
+        config = MikmbrConfig.from_dict(data)
 
         assert config.secret_detection.entropy['min_length'] == 16
         assert config.secret_detection.entropy['min_entropy'] == 3.0
@@ -192,7 +192,7 @@ class TestScanConfig:
             }
         }
 
-        config = AiriskConfig.from_dict(data)
+        config = MikmbrConfig.from_dict(data)
 
         assert '*.pyx' in config.scan.include_patterns
         assert 'build/*' in config.scan.exclude_patterns
@@ -225,7 +225,7 @@ class TestOutputConfig:
             }
         }
 
-        config = AiriskConfig.from_dict(data)
+        config = MikmbrConfig.from_dict(data)
 
         assert config.output.format == 'json'
         assert config.output.verbose is True
@@ -251,7 +251,7 @@ class TestConfigDiscovery:
             sub_dir.mkdir(parents=True)
 
             # Should find config from subdirectory
-            found = AiriskConfig.find_config_file(sub_dir)
+            found = MikmbrConfig.find_config_file(sub_dir)
             assert found is not None
             assert found.name in ['.mikmbr.yaml', '.mikmbr.yml']
 
@@ -262,7 +262,7 @@ class TestConfigDiscovery:
             config_file = tmp_path / '.mikmbr.yml'
             config_file.write_text('version: "1.4"')
 
-            found = AiriskConfig.find_config_file(tmp_path)
+            found = MikmbrConfig.find_config_file(tmp_path)
             assert found is not None
             assert found.name == '.mikmbr.yml'
 
@@ -270,5 +270,5 @@ class TestConfigDiscovery:
         """Test when no configuration file exists."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmp_path = Path(tmpdir)
-            found = AiriskConfig.find_config_file(tmp_path)
+            found = MikmbrConfig.find_config_file(tmp_path)
             assert found is None

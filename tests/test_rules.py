@@ -219,11 +219,12 @@ class TestHardcodedSecretsRule:
 
     def test_detects_api_key(self):
         code = """
-api_key = "sk_live_1234567890abcdef"
+api_key = "sk_live_xK9mZnQpRsTuVwXyZaBcDeFg"
 """
         rule = HardcodedSecretsRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, code, "test.py")
+        # Use "app.py" instead of "test.py" to avoid test file filtering
+        findings = rule.check(tree, code, "app.py")
 
         assert len(findings) == 1
         assert findings[0].rule_id == "HARDCODED_SECRET"
@@ -232,24 +233,26 @@ api_key = "sk_live_1234567890abcdef"
 
     def test_detects_password(self):
         code = """
-password = "super_secret_pass123"
+password = "MyR3allyStr0ngP@ssword"
 """
         rule = HardcodedSecretsRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, code, "test.py")
+        # Use "app.py" to avoid test file filtering
+        findings = rule.check(tree, code, "app.py")
 
         assert len(findings) == 1
 
     def test_detects_secret_in_dict(self):
         code = """
 config = {
-    "api_key": "abc123def456",
+    "api_key": "abc123def456xyz789qrs012abc",
     "database": "mydb"
 }
 """
         rule = HardcodedSecretsRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, code, "test.py")
+        # Use "app.py" to avoid test file filtering
+        findings = rule.check(tree, code, "app.py")
 
         assert len(findings) == 1
 
@@ -276,10 +279,11 @@ api_key = ""
 
     def test_detects_access_token(self):
         code = """
-access_token = "ghp_1234567890abcdefghij"
+access_token = "ghp_xK9mZnQpRsTuVwXyZaBcDeFgHiJkLmNoPqRs"
 """
         rule = HardcodedSecretsRule()
         tree = ast.parse(code)
-        findings = rule.check(tree, code, "test.py")
+        # Use "app.py" to avoid test file filtering
+        findings = rule.check(tree, code, "app.py")
 
         assert len(findings) == 1

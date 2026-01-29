@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
-**Fast, deterministic security scanner for Python.** Detects 25+ types of vulnerabilities including SQL injection, secrets, SSRF. Framework-specific rules for Django, Flask, FastAPI.
+**Fast, deterministic security scanner for Python.** Detects 28+ types of vulnerabilities including SQL injection, secrets, SSRF, insecure file permissions. Framework-specific rules for Django, Flask, FastAPI.
 
 ```bash
 pip install mikmbr
@@ -12,9 +12,9 @@ mikmbr scan .
 
 ## Features
 
-### Core Security Rules (21 rules)
+### Core Security Rules (22 rules)
 
-**21 Detection Rules** covering **9/10 OWASP Top 10 2021** categories:
+**22 Detection Rules** covering **9/10 OWASP Top 10 2021** categories:
 
 | Rule | Severity | Description | CWE |
 |------|----------|-------------|-----|
@@ -33,6 +33,7 @@ mikmbr scan .
 | Insecure Random | MEDIUM | Using random for security | CWE-338 |
 | Weak Crypto | MEDIUM | MD5, SHA1 usage | CWE-327 |
 | Regex DoS | MEDIUM | Catastrophic backtracking patterns | CWE-1333 |
+| Insecure File Permissions | HIGH | chmod 777, umask(0), world-writable | CWE-732 |
 | Bare Except | LOW | Catches all exceptions | CWE-396 |
 | Debug Code | LOW | Debug mode in production | CWE-489 |
 
@@ -274,6 +275,21 @@ requests.get(user_provided_url)
 ALLOWED_HOSTS = ['api.example.com']
 if urlparse(user_url).hostname in ALLOWED_HOSTS:
     requests.get(user_url)
+```
+</details>
+
+<details>
+<summary><b>Insecure File Permissions</b></summary>
+
+```python
+# Vulnerable
+import os
+os.chmod("/tmp/data.txt", 0o777)  # World-writable!
+os.umask(0)  # Disables permission restrictions
+
+# Secure
+os.chmod("/tmp/data.txt", 0o644)  # Owner read/write, others read
+os.umask(0o077)  # Restrictive default permissions
 ```
 </details>
 

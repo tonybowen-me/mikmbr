@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mikmbr - Python Security Scanner | Find Vulnerabilities Instantly</title>
-    <meta name="description" content="Fast, open-source security scanner for Python. Detects 25+ types of vulnerabilities including SQL injection, secrets, SSRF. Framework-specific rules for Django, Flask, FastAPI.">
+    <meta name="description" content="Fast, open-source security scanner for Python. Detects 28+ types of vulnerabilities including SQL injection, secrets, SSRF, insecure file permissions. Framework-specific rules for Django, Flask, FastAPI.">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -27,11 +27,11 @@
     <section class="hero">
         <div class="container">
             <h1>Find Security Vulnerabilities in Python Code. <span class="highlight">Instantly.</span></h1>
-            <p class="subtitle">Fast, deterministic security scanner powered by AST analysis. 24 detection rules with framework-specific checks for Django, Flask, and FastAPI.</p>
+            <p class="subtitle">Fast, deterministic security scanner powered by AST analysis. 28 detection rules with framework-specific checks for Django, Flask, and FastAPI.</p>
 
             <div class="hero-stats">
                 <div class="stat">
-                    <div class="stat-number">25+</div>
+                    <div class="stat-number">28+</div>
                     <div class="stat-label">Detection Rules</div>
                 </div>
                 <div class="stat">
@@ -83,7 +83,7 @@ Found 3 security issue(s):
                 <div class="feature-card">
                     <!-- <div class="feature-icon">🔍</div> -->
                     <h3>Comprehensive Detection</h3>
-                    <p>25+ security rules covering SQL injection, command injection, hardcoded secrets, SSRF, template injection, plus framework-specific checks for Django, Flask, and FastAPI.</p>
+                    <p>28+ security rules covering SQL injection, command injection, hardcoded secrets, SSRF, template injection, insecure file permissions, plus framework-specific checks for Django, Flask, and FastAPI.</p>
                 </div>
 
                 <div class="feature-card">
@@ -169,7 +169,7 @@ Found 3 security issue(s):
     <!-- Detection Rules Section -->
     <section id="rules" class="rules">
         <div class="container">
-            <h2>25+ Detection Rules</h2>
+            <h2>28+ Detection Rules</h2>
             <p class="section-subtitle">Comprehensive coverage of OWASP Top 10 2021 + Framework-Specific Checks</p>
 
             <div class="rules-grid">
@@ -228,9 +228,16 @@ Found 3 security issue(s):
                     <p>Unsanitized user input in logging statements</p>
                     <span class="rule-tag">CWE-117</span>
                 </div>
+
+                <div class="rule-card">
+                    <div class="rule-severity high">HIGH</div>
+                    <h3>Insecure File Permissions</h3>
+                    <p>chmod 777, umask(0), world-writable files</p>
+                    <span class="rule-tag">CWE-732</span>
+                </div>
             </div>
 
-            <a href="https://github.com/tonybowen-me/Mikmbr#detection-rules" class="btn btn-outline">View All 25+ Rules</a>
+            <a href="https://github.com/tonybowen-me/Mikmbr#detection-rules" class="btn btn-outline">View All 28+ Rules</a>
         </div>
     </section>
 

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentation - Mikmbr Security Scanner</title>
-    <meta name="description" content="Complete guide to using Mikmbr - Python security scanner with 25+ detection rules, CI/CD integration, and framework-specific checks.">
+    <meta name="description" content="Complete guide to using Mikmbr - Python security scanner with 28+ detection rules, CI/CD integration, and framework-specific checks.">
     <link rel="stylesheet" href="style.css">
     <style>
         .docs-container {
@@ -489,9 +489,9 @@ output:
 
         <!-- Detection Rules -->
         <section id="rules" class="docs-section">
-            <h2>🔍 Detection Rules (25+)</h2>
+            <h2>🔍 Detection Rules (28+)</h2>
 
-            <h3>Core Security Rules (21)</h3>
+            <h3>Core Security Rules (22)</h3>
             <table>
                 <tr>
                     <th>Rule</th>
@@ -547,6 +547,11 @@ output:
                     <td>XSS</td>
                     <td><span class="severity-badge severity-high">HIGH</span></td>
                     <td>Cross-Site Scripting</td>
+                </tr>
+                <tr>
+                    <td>INSECURE_FILE_PERMISSIONS</td>
+                    <td><span class="severity-badge severity-high">HIGH</span></td>
+                    <td>chmod 777, umask(0), world-writable files</td>
                 </tr>
             </table>
 
@@ -701,15 +706,15 @@ def get_user(user_id):
         <!-- Version Info -->
         <section class="docs-section">
             <h2>📦 Version Information</h2>
-            <p><strong>Current Version:</strong> 1.7.0</p>
+            <p><strong>Current Version:</strong> 1.8.0</p>
             <p><strong>Release Date:</strong> January 2026</p>
 
-            <h3>What's New in v1.7</h3>
+            <h3>What's New in v1.8</h3>
             <ul>
-                <li>🚦 Exit code configuration (<code>--fail-on</code>)</li>
-                <li>📄 Code context lines (<code>--context</code>)</li>
-                <li>⚡ CRITICAL severity level</li>
-                <li>🔧 SARIF v2.1 with CRITICAL support</li>
+                <li>📦 Dependency scanning with OSV database (<code>--check-deps</code>)</li>
+                <li>🎯 Dependencies-only mode (<code>--deps-only</code>)</li>
+                <li>🔒 Insecure File Permissions rule (chmod 777, umask(0))</li>
+                <li>🔧 28 total detection rules</li>
             </ul>
 
             <p><a href="https://github.com/tonybowen-me/Mikmbr/blob/main/CHANGELOG.md">View Full Changelog →</a></p>

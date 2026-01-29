@@ -10,17 +10,6 @@ pip install mikmbr
 mikmbr scan .
 ```
 
-## Why Mikmbr?
-
-- **⚡ Lightning Fast**: Scans 1000+ files per second using Python AST analysis
-- **🎯 Framework-Aware**: Specialized rules for Django, Flask, and FastAPI applications
-- **🔕 Suppression System**: Mark false positives with inline comments
-- **🔗 GitHub Integration**: SARIF output for native Code Scanning support
-- **🔒 Privacy First**: Runs entirely offline. Your code never leaves your machine
-- **📚 Educational**: Every finding includes CWE/OWASP references and fix suggestions
-- **🎛️ Fully Configurable**: YAML-based configuration for custom rules and severity levels
-- **🧠 Smart Secret Detection**: Three-layer detection with entropy analysis and pattern matching
-
 ## Features
 
 ### Core Security Rules (21 rules)

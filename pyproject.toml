@@ -23,10 +23,10 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
-where = ["src"]
+where = ["core/src"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["core/tests"]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
